@@ -3,7 +3,23 @@
 ## Problema
 
 - Modificările făcute în **admin panel** se salvează în **Plesk** (în `data/site_data.json`, eventual `admin/config.php`).
-- Aceste fișiere **nu sunt în GitHub**. La următorul deploy (upload sau `git pull` din repo), ele pot fi suprascrise și modificările se pierd.
+- Aceste fișiere **nu sunt în GitHub**. La următorul deploy (upload sau `git pull` din repo), dacă suprascrii tot site-ul, **modificările se pierd**.
+
+---
+
+## ✅ Checklist deploy – ca modificările din admin să rămână
+
+Când faci **commit** și apoi **deploy** (upload pe Plesk sau git pull pe server):
+
+| Pas | Ce să faci |
+|-----|-------------|
+| 1 | **Înainte de deploy:** dacă uploadezi de pe PC către Plesk, **nu include** folderul `data/` în upload (sau exclude explicit `data/site_data.json`), **sau** descarcă de pe server `data/site_data.json` ca backup. |
+| 2 | **Nu suprascrie** pe server: `data/site_data.json` și `admin/config.php`. Acestea rămân doar pe server și nu trebuie înlocuite la fiecare deploy. |
+| 3 | La **upload**: uploadează doar `index.php`, `admin/index.php`, `includes/`, `phpmailer/`, `data/site_data.json.example`, `data/README.md`, `.htaccess` — **fără** să ștergi sau să înlocuiești `data/site_data.json` de pe server. |
+
+Dacă **folosești Git pe server** și faci `git pull`: fișierele `data/site_data.json` și `admin/config.php` sunt în `.gitignore`, deci Git **nu le modifică** — modificările din admin rămân.
+
+Dacă **uploadezi manual** (FTP/File Manager): **nu** șterge sau suprascrie folderul `data/` pe server; uploadează doar fișierele de cod (PHP, CSS, etc.).
 
 ---
 

@@ -2,6 +2,9 @@
 // Încarcă datele dinamice ale site-ului (prețuri, contact, etc.)
 $base = dirname(__DIR__);
 $data_file = $base . '/data/site_data.json';
+if (!is_file($data_file)) {
+    $data_file = $base . '/data/site_data.json.example';
+}
 $site_data = [];
 if (is_file($data_file)) {
     $decoded = json_decode(file_get_contents($data_file), true);

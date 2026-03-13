@@ -1,0 +1,70 @@
+{
+  "1c": {
+    "base_price": 330,
+    "per_user": 30,
+    "per_gb_factor": 0.08,
+    "per_instance": 30,
+    "min_price": 150,
+    "trial_badge": "Test 7 zile",
+    "migrare_note": "Migrare, VPN/RDP și consultanță incluse."
+  },
+  "hosting": [
+    {
+      "name": "Hosting esențial",
+      "subtitle": "Începători & bloguri",
+      "icon": "H",
+      "description": "Bloguri, site-uri de prezentare, portofolii.",
+      "price": 9,
+      "price_alt": 15,
+      "price_note": "la plata anuală",
+      "price_note_alt": "(15 lei/lună la plata lunară)",
+      "features": ["1 site, 10 GB SSD NVMe", "Trafic nelimitat, SSL & backup"]
+    },
+    {
+      "name": "Hosting magazin online",
+      "subtitle": "Magazine online",
+      "icon": "P",
+      "description": "WooCommerce, PrestaShop, trafic mediu.",
+      "price": 24,
+      "price_note": "migrare gratuită",
+      "features": ["până la 5 site-uri, 30 GB", "Backup zilnic, cache, DDoS"]
+    },
+    {
+      "name": "Hosting business",
+      "subtitle": "Companii & aplicații",
+      "icon": "B",
+      "description": "CRM, ERP, aplicații interne, SLA ridicat.",
+      "price": 69,
+      "price_note": "contract & facturare firme",
+      "features": ["site-uri nelimitate, 100 GB", "Prioritate suport, IP dedicat"]
+    }
+  ],
+  "vps": [
+    { "name": "VDS-Start", "specs": "2 vCPU, 4 GB RAM, 40 GB NVMe", "price": 49 },
+    { "name": "VDS-Pro", "specs": "4 vCPU, 8 GB RAM, 80 GB NVMe", "price": 99 },
+    { "name": "VDS-Max", "specs": "8 vCPU, 16 GB RAM, 160 GB NVMe", "price": 199 }
+  ],
+  "domains": [
+    { "tld": ".ro", "price": 45 },
+    { "tld": ".com", "price": 59 },
+    { "tld": ".eu", "price": 49 },
+    { "tld": ".shop", "price": 79 }
+  ],
+  "contact": {
+    "email_sales": "sales@ondsolutions.md",
+    "email_support": "support@ondsolutions.md",
+    "phone": "+40 (0) 312 345 678",
+    "schedule": "24/7 ticket, L-V 9–18 telefon"
+  },
+  "hero": {
+    "badge_1": "Uptime 99,9%+",
+    "badge_2": "Migrare inclusă",
+    "badge_3": "Acces RDP/VPN"
+  },
+  "company": {
+    "name": "Smart Solutions",
+    "tagline": "Hosting 1C • VPS • Domenii",
+    "footer_text": "Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte din România și Europa.",
+    "copyright": "OND SOLUTIONS SRL"
+  }
+}

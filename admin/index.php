@@ -116,8 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save']) && !empty($_S
         ];
     }
     $json = json_encode($out, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    if ($json !== false && is_writable($data_file)) {
-        file_put_contents($data_file, $json);
+    $can_save = $json !== false && (is_writable($data_file) || (!is_file($data_file) && is_dir($data_dir) && is_writable($data_dir)));
+    if (!$can_save && !is_dir($data_dir)) {
+        @mkdir($data_dir, 0755, true);
+        $can_save = $json !== false && is_dir($data_dir) && is_writable($data_dir);
+    }
+    if ($can_save && file_put_contents($data_file, $json) !== false) {
         $_SESSION['admin_saved'] = true;
     } else {
         $_SESSION['admin_save_error'] = true;
