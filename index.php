@@ -164,6 +164,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @keyframes vpsItemIn {
             to { opacity: 1; transform: translateX(0); }
         }
+
+        /* Animații Scenarii hosting 1C */
+        .scenario-1c-item {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.25s ease, background-color 0.25s ease;
+        }
+        .scenario-1c-item:hover {
+            transform: translateX(6px) scale(1.02);
+            box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.18);
+            border-color: rgba(37, 99, 235, 0.35);
+            background-color: rgba(248, 250, 252, 0.95);
+        }
+        .scenario-1c-item .scenario-dot {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .scenario-1c-item:hover .scenario-dot {
+            transform: scale(1.35);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+        }
+        .scenario-1c-item:active {
+            transform: translateX(4px) scale(0.99);
+        }
+        .scenario-1c-list > li { opacity: 0; transform: translateX(-12px); }
+        .scenario-1c-list > li.visible { animation: scenario1cIn 0.5s ease-out forwards; }
+        .scenario-1c-list > li:nth-child(1) { animation-delay: 0.1s; }
+        .scenario-1c-list > li:nth-child(2) { animation-delay: 0.2s; }
+        .scenario-1c-list > li:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes scenario1cIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
     </style>
 </head>
 <body class="text-slate-900 antialiased">
@@ -321,32 +350,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </ul>
                     </div>
                 </div>
-                <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong" data-reveal>
-                    <h3 class="text-sm font-bold text-slate-900">Scenarii hosting 1C</h3>
-                    <ul class="mt-4 space-y-4">
-                        <li class="flex gap-3">
-                            <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcBlue"></span>
+                <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong scenario-1c-card" data-reveal>
+                    <h3 class="text-sm font-bold text-slate-900 mb-3">Scenarii hosting 1C</h3>
+                    <ul class="scenario-1c-list mt-4 space-y-4">
+                        <li class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 cursor-default transition-colors hover:border-slate-200">
+                            <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcBlue"></span>
                             <div>
                                 <p class="font-semibold text-slate-900">Contabilitate firmă mică</p>
                                 <p class="text-xs text-slate-600">3–5 useri, o bază, acces birou/acasă, backup și suport.</p>
                             </div>
                         </li>
-                        <li class="flex gap-3">
-                            <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcOrange"></span>
+                        <li class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 cursor-default transition-colors hover:border-slate-200">
+                            <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcOrange"></span>
                             <div>
                                 <p class="font-semibold text-slate-900">Grup de companii</p>
                                 <p class="text-xs text-slate-600">Mai multe baze, departamente în orașe diferite.</p>
                             </div>
                         </li>
-                        <li class="flex gap-3">
-                            <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-emerald-500"></span>
+                        <li class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 cursor-default transition-colors hover:border-slate-200">
+                            <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-emerald-500"></span>
                             <div>
                                 <p class="font-semibold text-slate-900">Integrare CRM / facturare</p>
                                 <p class="text-xs text-slate-600">1C cu CRM, facturare online, servicii bancare.</p>
                             </div>
                         </li>
                     </ul>
-                    <button onclick="scrollToSection('contact')" class="btn-anim mt-6 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white">
+                    <button onclick="scrollToSection('contact')" class="btn-cta-primary btn-anim mt-6 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-ihcBlue/25 hover:-translate-y-0.5">
                         Discută cu un consultant 1C
                     </button>
                 </div>
@@ -633,6 +662,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     el.classList.add('visible');
                     if (el.classList.contains('vps-config-card')) {
                         var items = el.querySelectorAll('.vps-config-list > li');
+                        items.forEach(function(li) { li.classList.add('visible'); });
+                    }
+                    if (el.classList.contains('scenario-1c-card')) {
+                        var items = el.querySelectorAll('.scenario-1c-list > li');
                         items.forEach(function(li) { li.classList.add('visible'); });
                     }
                 }
