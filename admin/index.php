@@ -20,6 +20,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $login_error = 'Parola este incorectă.';
 }
 
+// Schimbare parolă (doar dacă ești logat)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password']) && !empty($_SESSION['admin_logged'])) {
+    $current = $_POST['current_password'] ?? '';
+    $new1 = $_POST['new_password'] ?? '';
+    $new2 = $_POST['new_password_confirm'] ?? '';
+    $pw_error = '';
+    if (!password_verify($current, $admin_password_hash)) {
+        $pw_error = 'Parola actuală este incorectă.';
+    } elseif (strlen($new1) < 8) {
+        $pw_error = 'Parola nouă trebuie să aibă minim 8 caractere.';
+    } elseif ($new1 !== $new2) {
+        $pw_error = 'Parola nouă și confirmarea nu coincid.';
+    } else {
+        $config_path = __DIR__ . '/config.php';
+        $new_hash = password_hash($new1, PASSWORD_DEFAULT);
+        $content = file_get_contents($config_path);
+        $content = preg_replace(
+            '/\$admin_password_hash\s*=\s*[\'"][^\'"]*[\'"]\s*;/',
+            '$admin_password_hash = ' . var_export($new_hash, true) . ';',
+            $content,
+            1
+        );
+        if ($content && is_writable($config_path) && file_put_contents($config_path, $content) !== false) {
+            $_SESSION['admin_password_changed'] = true;
+            header('Location: index.php');
+            exit;
+        }
+        $pw_error = 'Nu s-a putut scrie în config.php. Verifică permisiunile sau schimbă parola manual (vezi SCHIMBARE_PAROLA.md).';
+    }
+}
+
 // Save data
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save']) && !empty($_SESSION['admin_logged'])) {
     $d = $_POST['data'] ?? [];
@@ -146,7 +177,9 @@ $vps = $site_data['vps'] ?? array_fill(0, 3, []);
 $domains = $site_data['domains'] ?? array_fill(0, 4, []);
 $saved = isset($_SESSION['admin_saved']);
 $save_error = isset($_SESSION['admin_save_error']);
-unset($_SESSION['admin_saved'], $_SESSION['admin_save_error']);
+$password_changed = isset($_SESSION['admin_password_changed']);
+unset($_SESSION['admin_saved'], $_SESSION['admin_save_error'], $_SESSION['admin_password_changed']);
+$pw_error = $pw_error ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="ro">
@@ -164,6 +197,7 @@ unset($_SESSION['admin_saved'], $_SESSION['admin_save_error']);
                 <p class="text-xs text-slate-500">Modifică prețurile și textele afișate pe site</p>
             </div>
             <div class="flex items-center gap-3">
+                <a href="#schimbare-parola" class="text-sm text-slate-600 hover:underline">Schimbă parola</a>
                 <a href="../index.php" target="_blank" class="text-sm text-blue-600 hover:underline">Vezi site-ul</a>
                 <a href="?logout=1" class="text-sm text-slate-500 hover:text-slate-700">Deconectare</a>
             </div>
@@ -171,6 +205,11 @@ unset($_SESSION['admin_saved'], $_SESSION['admin_save_error']);
     </header>
 
     <main class="max-w-4xl mx-auto px-4 py-8">
+        <?php if ($password_changed): ?>
+        <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 text-sm">
+            Parola a fost schimbată. La următoarea autentificare folosește parola nouă.
+        </div>
+        <?php endif; ?>
         <?php if ($saved): ?>
         <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 text-sm">
             Datele au fost salvate cu succes.
@@ -181,6 +220,29 @@ unset($_SESSION['admin_saved'], $_SESSION['admin_save_error']);
             Eroare la salvare. Verifică că directorul <code>data/</code> este scriibil.
         </div>
         <?php endif; ?>
+
+        <section id="schimbare-parola" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-10">
+            <h2 class="text-base font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Schimbă parola de administrator</h2>
+            <?php if ($pw_error): ?>
+            <div class="mb-4 rounded-lg bg-red-50 border border-red-200 text-red-700 px-3 py-2 text-sm"><?php echo htmlspecialchars($pw_error, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php endif; ?>
+            <form method="post" action="" class="space-y-4 max-w-md">
+                <input type="hidden" name="change_password" value="1">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Parola actuală</label>
+                    <input type="password" name="current_password" required autocomplete="current-password" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Parola nouă (min. 8 caractere)</label>
+                    <input type="password" name="new_password" required minlength="8" autocomplete="new-password" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Confirmă parola nouă</label>
+                    <input type="password" name="new_password_confirm" required minlength="8" autocomplete="new-password" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm">
+                </div>
+                <button type="submit" class="rounded-lg bg-slate-700 hover:bg-slate-800 text-white font-semibold px-4 py-2 text-sm">Salvează parola nouă</button>
+            </form>
+        </section>
 
         <form method="post" action="" class="space-y-10">
             <input type="hidden" name="save" value="1">
