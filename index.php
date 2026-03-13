@@ -138,6 +138,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         [data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
         [data-reveal].visible { opacity: 1; transform: translateY(0); }
+
+        /* Animații câmpuri VPS */
+        .vps-config-item {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.25s ease, background-color 0.25s ease;
+        }
+        .vps-config-item:hover {
+            transform: translateX(6px) scale(1.02);
+            box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.2);
+            border-color: rgba(37, 99, 235, 0.4);
+            background-color: rgba(248, 250, 252, 0.95);
+        }
+        .vps-config-item .vps-dot {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .vps-config-item:hover .vps-dot {
+            transform: scale(1.35);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+        }
+        .vps-config-list > li { opacity: 0; transform: translateX(-12px); }
+        .vps-config-list > li.visible { animation: vpsItemIn 0.5s ease-out forwards; }
+        .vps-config-list > li:nth-child(1) { animation-delay: 0.1s; }
+        .vps-config-list > li:nth-child(2) { animation-delay: 0.2s; }
+        .vps-config-list > li:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes vpsItemIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
     </style>
 </head>
 <body class="text-slate-900 antialiased">
@@ -394,22 +420,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-xs text-slate-600 mt-1">Update, securitate, monitorizare 24/7.</p>
                     </div>
                 </div>
-                <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong" data-reveal>
+                <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong vps-config-card" data-reveal>
                     <h3 class="text-sm font-bold text-slate-900 mb-3">Configurații VPS</h3>
-                    <ul class="space-y-3">
+                    <ul class="vps-config-list space-y-3">
                         <?php
                         $vps_colors = ['bg-ihcBlue', 'bg-ihcOrange', 'bg-emerald-500'];
                         foreach (($site_data['vps'] ?? []) as $vi => $v) :
                             $dot = $vps_colors[$vi] ?? 'bg-ihcBlue';
                         ?>
-                        <li class="flex gap-3 rounded-xl border border-slate-200 bg-white p-3">
-                            <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full <?php echo $dot; ?>"></span>
+                        <li class="vps-config-item flex gap-3 rounded-xl border border-slate-200 bg-white p-3 cursor-default">
+                            <span class="vps-dot mt-1.5 h-2 w-2 shrink-0 rounded-full <?php echo $dot; ?>"></span>
                             <div><p class="font-semibold text-slate-900"><?php echo htmlspecialchars($v['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p><p class="text-xs text-slate-600"><?php echo htmlspecialchars($v['specs'] ?? '', ENT_QUOTES, 'UTF-8'); ?> – de la <?php echo (int)($v['price'] ?? 0); ?> lei/lună</p></div>
                         </li>
                         <?php endforeach; ?>
                     </ul>
                     <p class="mt-3 text-[11px] text-slate-600">IP dedicat, firewall, ispmanager, cPanel, Plesk.</p>
-                    <button onclick="scrollToSection('contact')" class="btn-anim mt-4 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white">
+                    <button onclick="scrollToSection('contact')" class="vps-cta-btn btn-anim mt-4 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-ihcBlue/25 hover:-translate-y-0.5">
                         Cere ofertă personalizată
                     </button>
                 </div>
@@ -603,7 +629,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             reveals.forEach(function(el) {
                 var top = el.getBoundingClientRect().top;
                 var win = window.innerHeight - 80;
-                if (top < win) el.classList.add('visible');
+                if (top < win) {
+                    el.classList.add('visible');
+                    if (el.classList.contains('vps-config-card')) {
+                        var items = el.querySelectorAll('.vps-config-list > li');
+                        items.forEach(function(li) { li.classList.add('visible'); });
+                    }
+                }
             });
         }
         window.addEventListener('scroll', reveal);
