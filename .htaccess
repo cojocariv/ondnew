@@ -1,0 +1,8 @@
+# Asigură că index.php este folosit ca pagină principală
+DirectoryIndex index.php index.html
+
+# Activează mod_rewrite dacă îl folosești ulterior
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>

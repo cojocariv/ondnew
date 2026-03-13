@@ -1,0 +1,4 @@
+# Blochează accesul direct la fișierele de config
+<Files "config.php">
+    Require all denied
+</Files>
