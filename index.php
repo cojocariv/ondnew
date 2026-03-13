@@ -477,11 +477,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-semibold text-slate-800">Email</label>
-                        <input type="email" name="email" placeholder="email@firma.ro" value="<?php echo isset($email) ? htmlspecialchars($email, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
+                        <input type="email" name="email" placeholder="email" value="<?php echo isset($email) ? htmlspecialchars($email, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-semibold text-slate-800">Mesaj</label>
-                        <textarea name="mesaj" placeholder="Spune-ne despre 1C și site-urile tale..." rows="4" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20"><?php echo isset($mesaj) ? htmlspecialchars($mesaj, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
+                        <textarea name="mesaj" placeholder="Lasă-ne un mesaj aici..." rows="4" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20"><?php echo isset($mesaj) ? htmlspecialchars($mesaj, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                     </div>
                     <button type="submit" class="btn-anim w-full rounded-xl bg-gradient-to-r from-ihcOrange to-ihcBlue py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl">
                         Trimite cererea
