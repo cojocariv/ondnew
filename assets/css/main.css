@@ -1,0 +1,119 @@
+/* ondsolutions.md – Modern IT / Cloud theme */
+:root {
+    --color-deep: #0f172a;
+    --color-primary-blue: #2563eb;
+    --color-cyan: #06b6d4;
+    --color-bg: #f8fafc;
+    --color-text: #1e293b;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-heading {
+    font-family: 'Manrope', 'Inter', sans-serif;
+}
+
+/* Tailwind compat */
+.primary-blue { color: var(--color-primary-blue); }
+.bg-primary-blue { background-color: var(--color-primary-blue); }
+.border-primary-blue { border-color: var(--color-primary-blue); }
+.shadow-primary-blue\/30 { box-shadow: 0 10px 40px -10px rgba(37, 99, 235, 0.3); }
+.hover\:text-primary-blue:hover { color: var(--color-primary-blue); }
+.hover\:border-primary-blue:hover { border-color: var(--color-primary-blue); }
+.hover\:shadow-primary-blue\/40:hover { box-shadow: 0 20px 50px -15px rgba(37, 99, 235, 0.4); }
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary-blue) 0%, #1d4ed8 100%);
+}
+.btn-secondary { background: white; }
+
+/* Hero */
+.hero-gradient {
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.12), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6, 182, 212, 0.08), transparent 50%),
+                radial-gradient(ellipse 50% 30% at 20% 80%, rgba(37, 99, 235, 0.06), transparent 50%),
+                var(--color-bg);
+}
+.hero-grid {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(15, 23, 42, 0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+.floating-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+}
+.shape-1 { width: 300px; height: 300px; background: rgba(37, 99, 235, 0.15); top: 10%; left: 5%; animation-delay: 0s; }
+.shape-2 { width: 200px; height: 200px; background: rgba(6, 182, 212, 0.2); top: 60%; right: 10%; animation-delay: -5s; }
+.shape-3 { width: 150px; height: 150px; background: rgba(37, 99, 235, 0.1); bottom: 20%; left: 20%; animation-delay: -10s; }
+.shape-4 { width: 250px; height: 250px; background: rgba(6, 182, 212, 0.12); top: 30%; right: 25%; animation-delay: -7s; }
+.shape-5 { width: 180px; height: 180px; background: rgba(37, 99, 235, 0.08); bottom: 30%; right: 15%; animation-delay: -3s; }
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* Reveal on scroll */
+.reveal, [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible, [data-reveal].visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Cards */
+.service-card, .pricing-card, .impl-card {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.25s ease;
+}
+.service-card:hover, .impl-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.12);
+}
+.pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+}
+.pricing-card.featured {
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 20px 50px -15px rgba(37, 99, 235, 0.25);
+}
+
+/* Buttons */
+button:active, .btn-primary:active, .btn-secondary:active {
+    transform: scale(0.98);
+}
+
+/* Navbar scroll */
+#navbar.scrolled {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Section spacing */
+section {
+    scroll-margin-top: 80px;
+}
+
+/* Form */
+.input-float label {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.input-float input:focus + label,
+.input-float input:not(:placeholder-shown) + label,
+.input-float textarea:focus + label,
+.input-float textarea:not(:placeholder-shown) + label {
+    transform: translateY(-1.5rem) scale(0.85);
+    color: var(--color-primary-blue);
+}
