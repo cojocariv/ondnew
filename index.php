@@ -159,6 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="#1c" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Hosting 1C</a>
             <a href="#tarife" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Găzduire web</a>
             <a href="#vps" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">VPS / VDS</a>
+            <a href="#zapier" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Automatizări</a>
             <a href="#domenii" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Domenii</a>
             <a href="#contact" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Contact</a>
         </nav>
@@ -416,6 +417,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
+    <!-- AUTOMATIZARE ZAPIER -->
+    <section id="zapier" class="border-b border-slate-200/60 bg-slate-50/70">
+        <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
+            <p class="section-kicker text-xs font-bold uppercase text-ihcBlue">Automatizări</p>
+            <div class="mt-2 grid gap-10 lg:grid-cols-[1.05fr,1fr] lg:gap-14">
+                <div data-reveal>
+                    <h2 class="text-3xl font-bold text-slate-900 leading-tight">Automatizare Zapier — fluxuri de email și procese recurente</h2>
+                    <p class="mt-4 text-slate-600 leading-relaxed">
+                        Pentru companii care trebuie să transmită periodic un flux de emailuri — de exemplu acte de verificare, solicitări către parteneri sau clienți, raporturi — acest flux poate fi automatizat. Configurăm Zapier astfel încât trimiterile să se declanșeze la intervalul stabilit, fără intervenție manuală.
+                    </p>
+                    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
+                            <p class="text-sm font-bold text-slate-900">Fluxuri periodice</p>
+                            <p class="text-xs text-slate-600 mt-1">Acte de verificare, solicitări, mementouri trimise automat la data sau la intervalul stabilit.</p>
+                        </div>
+                        <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
+                            <p class="text-sm font-bold text-slate-900">Integrări</p>
+                            <p class="text-xs text-slate-600 mt-1">Conectăm Gmail, Outlook, CRM, foi de calcul și alte aplicații în fluxuri clare și ușor de modificat.</p>
+                        </div>
+                    </div>
+                    <ul class="mt-6 list-disc space-y-1 pl-5 text-sm text-slate-600">
+                        <li>Configurare Zapier pentru trimiteri automate de emailuri</li>
+                        <li>Fluxuri la perioadă fixă sau declanșate de evenimente</li>
+                        <li>Șabloane și personalizare pentru fiecare tip de solicitare</li>
+                    </ul>
+                </div>
+                <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong" data-reveal>
+                    <h3 class="text-sm font-bold text-slate-900">Exemplu de utilizare</h3>
+                    <p class="mt-3 text-sm text-slate-600">
+                        O firmă trebuie să ceară lunar de la parteneri acte de verificare și documente. În loc să trimită manual zeci de emailuri, configurăm un Zap care, la o anumită dată sau la un semnal (ex. intrare în lună nouă), trimite automat solicitările către lista definită, cu șablon personalizat. Economisești timp și reduci erorile omise.
+                    </p>
+                    <button onclick="scrollToSection('contact')" class="btn-anim mt-6 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white">
+                        Cere ofertă pentru automatizare
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- DOMENII -->
     <section id="domenii" class="border-b border-slate-200/60 bg-slate-50/70">
         <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
@@ -506,7 +546,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-800 mb-2">Servicii</p>
-                <div class="space-y-1 text-xs"><a href="#1c" class="block text-slate-600 hover:text-ihcBlue">Hosting 1C</a><a href="#tarife" class="block text-slate-600 hover:text-ihcBlue">Găzduire</a><a href="#vps" class="block text-slate-600 hover:text-ihcBlue">VPS / VDS</a><a href="#domenii" class="block text-slate-600 hover:text-ihcBlue">Domenii</a></div>
+                <div class="space-y-1 text-xs"><a href="#1c" class="block text-slate-600 hover:text-ihcBlue">Hosting 1C</a><a href="#tarife" class="block text-slate-600 hover:text-ihcBlue">Găzduire</a><a href="#vps" class="block text-slate-600 hover:text-ihcBlue">VPS / VDS</a><a href="#zapier" class="block text-slate-600 hover:text-ihcBlue">Automatizări Zapier</a><a href="#domenii" class="block text-slate-600 hover:text-ihcBlue">Domenii</a></div>
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-800 mb-2">Companie</p>
