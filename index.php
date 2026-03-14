@@ -9,14 +9,31 @@ require __DIR__ . '/includes/site_data.php';
 $contact_success = '';
 $contact_error   = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nume   = isset($_POST['nume'])   ? trim($_POST['nume'])   : '';
-    $email  = isset($_POST['email'])  ? trim($_POST['email'])  : '';
-    $mesaj  = isset($_POST['mesaj'])  ? trim($_POST['mesaj'])  : '';
-    if ($nume === '' || $email === '' || $mesaj === '') {
-        $contact_error = 'Te rugăm să completezi numele, emailul și mesajul.';
+    $first_name = isset($_POST['first_name']) ? trim($_POST['first_name']) : '';
+    $last_name  = isset($_POST['last_name'])  ? trim($_POST['last_name'])  : '';
+    $email      = isset($_POST['email'])      ? trim($_POST['email'])      : '';
+    $mesaj      = isset($_POST['mesaj'])      ? trim($_POST['mesaj'])      : '';
+    if ($first_name === '' || $last_name === '' || $email === '' || $mesaj === '') {
+        $contact_error = 'Te rugăm să completezi prenumele, numele, emailul și mesajul.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $contact_error = 'Adresa de email nu este validă.';
     } else {
+        $db_ok = false;
+        if (is_file(__DIR__ . '/db/config.php')) {
+            try {
+                require __DIR__ . '/db/config.php';
+                $stmt = $pdo->prepare('INSERT INTO contact_requests (first_name, last_name, email, message) VALUES (:fn, :ln, :em, :msg)');
+                $stmt->execute([
+                    ':fn'  => mb_substr($first_name, 0, 100),
+                    ':ln'  => mb_substr($last_name, 0, 100),
+                    ':em'  => mb_substr($email, 0, 150),
+                    ':msg' => $mesaj,
+                ]);
+                $db_ok = true;
+            } catch (Throwable $e) {
+                $db_ok = false;
+            }
+        }
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
@@ -29,16 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->CharSet    = 'UTF-8';
             $mail->setFrom('contact@ondsolutions.md', 'Smart Solutions');
             $mail->addAddress('sales@ondsolutions.md');
-            $mail->addReplyTo($email, $nume);
+            $mail->addReplyTo($email, $first_name . ' ' . $last_name);
             $mail->Subject = 'Mesaj nou de pe formularul Smart Solutions';
             $body  = "Ai primit un mesaj nou de pe site.\r\n\r\n";
-            $body .= "Nume: {$nume}\r\n";
-            $body .= "Email: {$email}\r\n\r\n";
-            $body .= "Mesaj:\r\n{$mesaj}\r\n";
+            $body .= "Prenume: {$first_name}\r\nNume: {$last_name}\r\nEmail: {$email}\r\n\r\nMesaj:\r\n{$mesaj}\r\n";
             $mail->Body = $body;
             $mail->send();
             $contact_success = 'Mesajul a fost trimis cu succes. Îți vom răspunde în cel mai scurt timp.';
-            $nume = $email = $mesaj = '';
+            $first_name = $last_name = $email = $mesaj = '';
         } catch (Exception $e) {
             $contact_error = 'A apărut o eroare la trimiterea mesajului: ' .
                 htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
@@ -313,9 +328,15 @@ $contact = $site_data['contact'] ?? [];
                     <?php elseif ($contact_error): ?>
                     <div class="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800"><?php echo htmlspecialchars($contact_error, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php endif; ?>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Nume</label>
-                        <input type="text" name="nume" value="<?php echo isset($nume) ? htmlspecialchars($nume, ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="Numele tău" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-primary-blue focus:ring-2 focus:ring-primary-blue/20">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Prenume</label>
+                            <input type="text" name="first_name" value="<?php echo isset($first_name) ? htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="Prenumele tău" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-primary-blue focus:ring-2 focus:ring-primary-blue/20">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Nume</label>
+                            <input type="text" name="last_name" value="<?php echo isset($last_name) ? htmlspecialchars($last_name, ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="Numele tău" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-primary-blue focus:ring-2 focus:ring-primary-blue/20">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Email</label>
