@@ -12,6 +12,17 @@ body {
     background-color: var(--color-bg);
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/* Formulare și chat: permitem selectarea și inserarea textului */
+input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 h1, h2, h3, .font-heading {
@@ -70,6 +81,18 @@ h1, h2, h3, .font-heading {
 .reveal.visible, [data-reveal].visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* About section boxes – reveal la scroll cu decalaj + hover */
+.about-box.reveal {
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.about-box.reveal:nth-child(1) { transition-delay: 0.05s; }
+.about-box.reveal:nth-child(2) { transition-delay: 0.15s; }
+.about-box.reveal:nth-child(3) { transition-delay: 0.25s; }
+.about-box.reveal:nth-child(4) { transition-delay: 0.35s; }
+.about-box.visible.reveal:hover .about-box-icon {
+    transform: scale(1.08);
 }
 
 /* Cards */

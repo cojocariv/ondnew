@@ -269,24 +269,24 @@ $contact = $site_data['contact'] ?? [];
                 <p class="reveal mt-4 text-slate-600 leading-relaxed"><?php echo htmlspecialchars($company['footer_text'] ?? 'Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte din România și Europa.', ENT_QUOTES, 'UTF-8'); ?></p>
                 <p class="reveal mt-4 text-slate-600">Oferim infrastructură de servere securizată, migrare 1C în cloud, soluții Microsoft 365 și suport tehnic. Experiență în migrare 1C, suport 24/7, securitate și backup.</p>
             </div>
-            <div class="reveal grid grid-cols-2 gap-4">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-blue/10 text-2xl">🖥</div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="about-box reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:border-primary-blue/30 hover:shadow-lg hover:shadow-primary-blue/10 hover:-translate-y-1">
+                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-blue/10 text-2xl transition-transform duration-300 about-box-icon">🖥</div>
                     <p class="font-heading font-semibold text-slate-900">Servere</p>
                     <p class="text-xs text-slate-600 mt-1">VPS, dedicat, cloud</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-500/10 text-2xl">☁</div>
+                <div class="about-box reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:border-primary-blue/30 hover:shadow-lg hover:shadow-primary-blue/10 hover:-translate-y-1">
+                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-500/10 text-2xl transition-transform duration-300 about-box-icon">☁</div>
                     <p class="font-heading font-semibold text-slate-900">Cloud</p>
                     <p class="text-xs text-slate-600 mt-1">Migrare, Azure, 365</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10 text-2xl">🛡</div>
+                <div class="about-box reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:border-primary-blue/30 hover:shadow-lg hover:shadow-primary-blue/10 hover:-translate-y-1">
+                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10 text-2xl transition-transform duration-300 about-box-icon">🛡</div>
                     <p class="font-heading font-semibold text-slate-900">Securitate</p>
                     <p class="text-xs text-slate-600 mt-1">Backup, VPN, MFA</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/10 text-2xl">⚡</div>
+                <div class="about-box reveal rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:border-primary-blue/30 hover:shadow-lg hover:shadow-primary-blue/10 hover:-translate-y-1">
+                    <div class="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/10 text-2xl transition-transform duration-300 about-box-icon">⚡</div>
                     <p class="font-heading font-semibold text-slate-900">Automatizare</p>
                     <p class="text-xs text-slate-600 mt-1">Zapier, fluxuri</p>
                 </div>
@@ -358,6 +358,17 @@ $contact = $site_data['contact'] ?? [];
 <?php include __DIR__ . '/partials/chat_widget.php'; ?>
 
 <script src="assets/js/app.js"></script>
+<script>
+(function() {
+    function blockCopyCut(e) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+        e.preventDefault();
+    }
+    document.addEventListener('copy', blockCopyCut);
+    document.addEventListener('cut', blockCopyCut);
+})();
+</script>
 <script>
 (function() {
     var c = <?php echo json_encode($site_data['1c'] ?? ['base_price'=>330,'per_user'=>30,'per_gb_factor'=>0.08,'per_instance'=>30,'min_price'=>150]); ?>;

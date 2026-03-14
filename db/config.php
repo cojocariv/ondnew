@@ -8,8 +8,8 @@
 $DB_HOST = 'localhost';
 $DB_PORT = '5432';
 $DB_NAME = 'smartdb';           // numele bazei tale PostgreSQL
-$DB_USER = 'SETEAZĂ_USER';      // utilizatorul PostgreSQL
-$DB_PASS = 'SETEAZĂ_PAROLA';    // parola utilizatorului
+$DB_USER = 'admindb';      // utilizatorul PostgreSQL
+$DB_PASS = 'AAD1sup@$$';    // parola utilizatorului
 
 $db_error = null;
 if (!extension_loaded('pdo_pgsql')) {
