@@ -7,19 +7,32 @@ if (empty($_SESSION['db_admin_logged_in'])) {
 
 require __DIR__ . '/config.php';
 
-$search = isset($_GET['q']) ? trim($_GET['q']) : '';
-$params = [];
-$sql = 'SELECT id, first_name, last_name, email, message, created_at FROM contact_requests ';
-if ($search !== '') {
-    $sql .= 'WHERE first_name LIKE :q OR last_name LIKE :q OR email LIKE :q ';
-    $params[':q'] = '%' . $search . '%';
+// Verifică dacă tabelul există; dacă nu, afișăm mesaj și link la instalare
+$tableExists = false;
+try {
+    $check = $pdo->query("SELECT 1 FROM information_schema.tables WHERE table_name = 'contact_requests'");
+    $tableExists = $check && $check->fetch() !== false;
+} catch (Throwable $e) {
+    $tableExists = false;
 }
-$sql .= 'ORDER BY created_at DESC';
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$rows = $stmt->fetchAll();
-$total = count($rows);
+$rows = [];
+$total = 0;
+$search = isset($_GET['q']) ? trim($_GET['q']) : '';
+
+if ($tableExists) {
+    $params = [];
+    $sql = 'SELECT id, first_name, last_name, email, message, created_at FROM contact_requests ';
+    if ($search !== '') {
+        $sql .= 'WHERE first_name LIKE :q OR last_name LIKE :q OR email LIKE :q ';
+        $params[':q'] = '%' . $search . '%';
+    }
+    $sql .= 'ORDER BY created_at DESC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll();
+    $total = count($rows);
+}
 ?>
 <!DOCTYPE html>
 <html lang="ro">
@@ -67,6 +80,13 @@ $total = count($rows);
     </header>
 
     <main class="mx-auto max-w-6xl px-4 py-6">
+        <?php if (!$tableExists): ?>
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-amber-900">
+            <h2 class="text-lg font-semibold">Tabelul „contact_requests” nu există</h2>
+            <p class="mt-2 text-sm">Creează tabelul în baza de date o singură dată, apoi reîncarcă această pagină.</p>
+            <a href="install_table.php" class="mt-4 inline-block rounded-xl bg-primary-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-95">Creează tabelul acum →</a>
+        </div>
+        <?php else: ?>
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-slate-900">Cereri de contact</h1>
@@ -128,6 +148,7 @@ $total = count($rows);
                 </table>
             </div>
         </div>
+        <?php endif; ?>
     </main>
 </body>
 </html>
