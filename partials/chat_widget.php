@@ -1,10 +1,13 @@
-<!-- Mini-chat widget -->
-<div id="chat-widget" class="fixed bottom-6 right-6 z-50 font-sans">
+<!-- Mini-chat widget: script inline pentru deschidere/închidere (funcționează chiar dacă chat.js nu se încarcă) -->
+<style>
+#chat-panel.chat-panel-closed { display: none !important; }
+</style>
+<div id="chat-widget" class="fixed bottom-6 right-6 z-[100] font-sans">
     <button type="button" id="chat-widget-toggle" aria-label="Deschide chat" class="flex h-14 w-14 items-center justify-center rounded-full bg-primary-blue text-white shadow-lg shadow-primary-blue/40 hover:scale-105 transition-transform focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2">
         <svg id="chat-icon-open" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-        <svg id="chat-icon-close" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <svg id="chat-icon-close" class="h-6 w-6" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
-    <div id="chat-panel" class="hidden absolute bottom-16 right-0 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden flex flex-col" style="height: 420px;">
+    <div id="chat-panel" class="chat-panel-closed absolute bottom-16 right-0 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden flex flex-col" style="height: 420px;">
         <div class="bg-primary-blue text-white px-4 py-3 flex items-center justify-between shrink-0">
             <span class="font-semibold">Chat</span>
             <button type="button" id="chat-panel-close" class="p-1 rounded hover:bg-white/20" aria-label="Închide">×</button>
@@ -27,4 +30,23 @@
         <div id="chat-error" class="hidden px-4 py-2 bg-red-50 text-red-700 text-sm shrink-0"></div>
     </div>
 </div>
+<script>
+(function() {
+    function toggleChat(open) {
+        var panel = document.getElementById('chat-panel');
+        var iconOpen = document.getElementById('chat-icon-open');
+        var iconClose = document.getElementById('chat-icon-close');
+        if (!panel) return;
+        if (open === undefined) open = panel.classList.contains('chat-panel-closed');
+        panel.classList.toggle('chat-panel-closed', !open);
+        if (iconOpen) iconOpen.style.display = open ? 'none' : 'block';
+        if (iconClose) iconClose.style.display = open ? 'block' : 'none';
+    }
+    document.getElementById('chat-widget-toggle') && document.getElementById('chat-widget-toggle').addEventListener('click', function() {
+        var panel = document.getElementById('chat-panel');
+        toggleChat(panel && panel.classList.contains('chat-panel-closed'));
+    });
+    document.getElementById('chat-panel-close') && document.getElementById('chat-panel-close').addEventListener('click', function() { toggleChat(false); });
+})();
+</script>
 <script src="assets/js/chat.js"></script>

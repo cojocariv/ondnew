@@ -29,18 +29,22 @@
     var iconClose = document.getElementById('chat-icon-close');
 
     function showError(msg) {
-        errorEl.textContent = msg || '';
-        errorEl.classList.toggle('hidden', !msg);
+        if (errorEl) {
+            errorEl.textContent = msg || '';
+            errorEl.classList.toggle('hidden', !msg);
+        }
     }
     function setOpen(open) {
+        if (!panel) return;
         if (open) {
+            panel.classList.remove('chat-panel-closed');
             panel.classList.remove('hidden');
-            iconOpen.classList.add('hidden');
-            iconClose.classList.remove('hidden');
+            if (iconOpen) iconOpen.style.display = 'none';
+            if (iconClose) iconClose.style.display = 'block';
         } else {
-            panel.classList.add('hidden');
-            iconOpen.classList.remove('hidden');
-            iconClose.classList.add('hidden');
+            panel.classList.add('chat-panel-closed');
+            if (iconOpen) iconOpen.style.display = 'block';
+            if (iconClose) iconClose.style.display = 'none';
         }
     }
     function showThread() {
@@ -109,7 +113,6 @@
             });
     }
 
-    if (toggle) toggle.addEventListener('click', function () { setOpen(!panel.classList.contains('hidden')); });
     if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
     if (startBtn) {
         startBtn.addEventListener('click', function () {
