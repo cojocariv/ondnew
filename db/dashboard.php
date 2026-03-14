@@ -71,6 +71,7 @@ if ($tableExists) {
                 </a>
             </div>
             <div class="flex items-center gap-3">
+                <a href="cabinet/conversations.php" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Cabinet chat</a>
                 <a href="../index.php" target="_blank" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Site</a>
                 <a href="logout.php" class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
                     Deconectare

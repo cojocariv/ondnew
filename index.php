@@ -355,6 +355,7 @@ $contact = $site_data['contact'] ?? [];
 </main>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>
+<?php include __DIR__ . '/partials/chat_widget.php'; ?>
 
 <script src="assets/js/app.js"></script>
 <script>

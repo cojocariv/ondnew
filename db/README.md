@@ -32,3 +32,11 @@ Dacă tabelul **`contact_requests`** nu există:
 ## 4. Formularul de contact (site)
 
 La trimitere, datele se salvează în **contact_requests** (first_name, last_name, email, message) și se trimite și emailul ca înainte.
+
+---
+
+## 5. Mini-chat și Cabinet
+
+- **Pe site:** vizitatorii văd un buton de chat (colț dreapta jos). Introdu numele și emailul, apoi pot trimite mesaje. Conversațiile se salvează în baza de date.
+- **Cabinet (admin):** după login la `/db/`, apasă **„Cabinet chat”** sau mergi la **`/db/cabinet/conversations.php`**. Acolo vezi toate conversațiile și poți răspunde clienților.
+- **Instalare tabele chat:** dacă nu există tabelele pentru chat, rulează o dată **`/db/install_chat.php`** (după autentificare). Creează `chat_conversations` și `chat_messages`.
