@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['body'])) {
                 </div>
                 <?php endforeach; ?>
             </div>
-            <form method="post" class="p-4 border-t border-slate-100">
+            <form method="post" id="reply-form" class="p-4 border-t border-slate-100">
                 <div class="flex gap-2">
                     <textarea name="body" placeholder="Răspunde clientului..." rows="2" required class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm resize-none focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="4000"></textarea>
                     <button type="submit" class="self-end rounded-xl bg-primary-blue text-white px-4 py-2 text-sm font-semibold hover:opacity-95 shrink-0">Trimite</button>
@@ -83,5 +83,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['body'])) {
             </form>
         </div>
     </main>
+    <script>
+    (function() {
+        var convId = <?php echo (int)$id; ?>;
+        var messagesEl = document.getElementById('chat-messages');
+        var replyForm = document.getElementById('reply-form');
+        function renderMessage(m) {
+            var isAdmin = m.sender_type === 'admin';
+            var div = document.createElement('div');
+            div.className = 'flex ' + (isAdmin ? 'justify-end' : 'justify-start');
+            div.dataset.msgId = m.id;
+            var bubble = document.createElement('div');
+            bubble.className = 'max-w-[85%] rounded-2xl px-4 py-2 text-sm ' + (isAdmin ? 'bg-primary-blue text-white' : 'bg-slate-100 text-slate-800');
+            bubble.innerHTML = (m.body || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') +
+                '<span class="block text-xs mt-1 opacity-80">' + (m.created_at_formatted || '') + '</span>';
+            div.appendChild(bubble);
+            return div;
+        }
+        function loadMessages() {
+            fetch('api_messages.php?id=' + convId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (!data.ok || !data.messages || !messagesEl) return;
+                    var ids = data.messages.map(function(m) { return m.id; }).join(',');
+                    if (messagesEl.dataset.lastIds === ids) return;
+                    messagesEl.dataset.lastIds = ids;
+                    var wasAtBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
+                    messagesEl.innerHTML = '';
+                    data.messages.forEach(function(m) {
+                        messagesEl.appendChild(renderMessage(m));
+                    });
+                    if (wasAtBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+                })
+                .catch(function() {});
+        }
+        setInterval(loadMessages, 4000);
+        replyForm && replyForm.addEventListener('submit', function() {
+            setTimeout(loadMessages, 500);
+        });
+    })();
+    </script>
 </body>
 </html>

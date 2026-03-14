@@ -27,7 +27,8 @@ if (!extension_loaded('pdo_pgsql')) {
     }
 }
 
-if ($db_error !== null) {
+// Când e inclus din chat_api.php cu DB_CONFIG_SILENT, nu afișăm HTML și nu facem exit
+if ($db_error !== null && !defined('DB_CONFIG_SILENT')) {
     if (!headers_sent()) {
         http_response_code(503);
         header('Content-Type: text/html; charset=utf-8');

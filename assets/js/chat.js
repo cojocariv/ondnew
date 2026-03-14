@@ -62,24 +62,39 @@
         div.appendChild(bubble);
         return div;
     }
-    function loadMessages() {
+    var pollInterval = null;
+    function loadMessages(scrollToBottom) {
         var cid = getConvId();
         if (cid < 1) return;
+        if (scrollToBottom === undefined) scrollToBottom = true;
         fetch(API + '?action=messages&conversation_id=' + cid)
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 showError('');
                 if (data.ok && data.messages) {
+                    var wasAtBottom = !messagesEl || messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 50;
                     messagesEl.innerHTML = '';
                     data.messages.forEach(function (m) {
                         messagesEl.appendChild(renderMessage(m));
                     });
-                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                    if (scrollToBottom || wasAtBottom) {
+                        messagesEl.scrollTop = messagesEl.scrollHeight;
+                    }
                 }
             })
-            .catch(function () {
-                showError('Nu s-au putut încărca mesajele.');
-            });
+            .catch(function () {});
+    }
+    function startPolling() {
+        if (pollInterval) return;
+        pollInterval = setInterval(function () {
+            if (getConvId() > 0) loadMessages(false);
+        }, 4000);
+    }
+    function stopPolling() {
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
     }
     function sendMessage() {
         var body = (inputEl && inputEl.value) ? inputEl.value.trim() : '';
@@ -135,6 +150,7 @@
                     if (data.ok && data.conversation_id) {
                         setConvId(data.conversation_id);
                         showThread();
+                        startPolling();
                     } else {
                         showError(data.error || 'Eroare.');
                     }
@@ -160,5 +176,6 @@
         startForm.classList.add('hidden');
         threadWrap.classList.remove('hidden');
         loadMessages();
+        startPolling();
     }
 })();

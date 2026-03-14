@@ -25,18 +25,24 @@ $config_path = __DIR__ . '/db/config.php';
 if (!is_file($config_path)) {
     json_error('Chat indisponibil.');
 }
+define('DB_CONFIG_SILENT', true);
 ob_start();
 try {
     require $config_path;
 } catch (Throwable $e) {
     ob_end_clean();
-    json_error('Serviciu temporar indisponibil.');
-}
-if (isset($db_error) && $db_error !== null) {
-    ob_end_clean();
-    json_error('Chat indisponibil.');
+    if (!headers_sent()) {
+        http_response_code(503);
+    }
+    json_error('Chat temporar indisponibil. Încearcă mai târziu.');
 }
 ob_end_clean();
+if (isset($db_error) && $db_error !== null) {
+    if (!headers_sent()) {
+        http_response_code(503);
+    }
+    json_error('Chat indisponibil. Verifică în panoul /db că baza de date este configurată (db/config.php) și că tabelele pentru chat există (rulează /db/install_chat.php).');
+}
 
 // Verifică dacă tabelele chat există
 try {
