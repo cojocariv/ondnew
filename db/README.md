@@ -1,19 +1,23 @@
 # Admin Contact Requests (/db)
 
-## 1. Setează user și parola MySQL
+Baza de date folosită este **PostgreSQL**.
+
+## 1. Setează user și parola PostgreSQL
 
 Deschide **`db/config.php`** și înlocuiește:
 
-- `SETEAZĂ_USER` → utilizatorul tău MySQL (ex: `root` sau user-ul pentru `smartdb`)
-- `SETEAZĂ_PAROLA` → parola pentru acel utilizator
+- `$DB_HOST` – de obicei `localhost`
+- `$DB_PORT` – de obicei `5432`
+- `$DB_NAME` – numele bazei tale PostgreSQL
+- `$DB_USER` → utilizatorul PostgreSQL
+- `$DB_PASS` → parola pentru acel utilizator
 
 ## 2. Tabel în baza de date
 
-Dacă tabelul **`contact_requests`** nu există în baza **smartdb**, rulează scriptul:
+Dacă tabelul **`contact_requests`** nu există:
 
-**`db/contact_requests.sql`**
-
-(sau copiază conținutul în phpMyAdmin / MySQL și execută).
+- **Variantă 1:** După login la `/db/`, deschide **`/db/install_table.php`** și apasă „Creează tabelul”. Șterge apoi fișierul `install_table.php` de pe server.
+- **Variantă 2:** Rulează manual în clientul PostgreSQL (psql, pgAdmin etc.) conținutul fișierului **`db/contact_requests.sql`**.
 
 ## 3. Acces
 

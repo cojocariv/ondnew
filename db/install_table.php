@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
 
 $tableExists = false;
 try {
-    $stmt = $pdo->query("SHOW TABLES LIKE 'contact_requests'");
+    $stmt = $pdo->query("SELECT 1 FROM information_schema.tables WHERE table_name = 'contact_requests'");
     $tableExists = $stmt->fetch() !== false;
 } catch (Exception $e) {
     $tableExists = false;
