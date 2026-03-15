@@ -18,7 +18,7 @@ if ($chatTablesExist) {
         $stmt = $pdo->query("
             SELECT c.id, c.visitor_name, c.visitor_email, c.created_at, c.updated_at,
                    (SELECT body FROM chat_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_message,
-                   (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = c.id AND sender_type = 'visitor') AS visitor_count
+                   (SELECT sender_type FROM chat_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS last_sender_type
             FROM chat_conversations c
             ORDER BY c.updated_at DESC
         ");
@@ -59,9 +59,11 @@ if ($chatTablesExist) {
             </div>
         <?php else: ?>
             <ul class="space-y-2">
-                <?php foreach ($conversations as $conv): ?>
+                <?php foreach ($conversations as $conv):
+                    $isUnread = isset($conv['last_sender_type']) && $conv['last_sender_type'] === 'visitor';
+                ?>
                 <li>
-                    <a href="conversation.php?id=<?php echo (int)$conv['id']; ?>" class="block rounded-xl border border-slate-200 bg-white p-4 hover:border-primary-blue/40 hover:shadow-md transition">
+                    <a href="conversation.php?id=<?php echo (int)$conv['id']; ?>" class="block rounded-xl border p-4 hover:border-primary-blue/40 hover:shadow-md transition <?php echo $isUnread ? 'bg-primary-blue/10 border-primary-blue/30' : 'bg-white border-slate-200'; ?>">
                         <div class="flex items-center justify-between">
                             <div>
                                 <span class="font-semibold text-slate-900"><?php echo htmlspecialchars($conv['visitor_name'], ENT_QUOTES, 'UTF-8'); ?></span>
