@@ -9,21 +9,21 @@
     </button>
     <div id="chat-panel" class="chat-panel-closed absolute bottom-16 right-0 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden flex flex-col" style="height: 420px;">
         <div class="bg-primary-blue text-white px-4 py-3 flex items-center justify-between shrink-0">
-            <span class="font-semibold">Chat</span>
-            <button type="button" id="chat-panel-close" class="p-1 rounded hover:bg-white/20" aria-label="Închide">×</button>
+            <span class="font-semibold"><?php echo htmlspecialchars(t('chat_title', 'Chat'), ENT_QUOTES, 'UTF-8'); ?></span>
+            <button type="button" id="chat-panel-close" class="p-1 rounded hover:bg-white/20" aria-label="×">×</button>
         </div>
         <div id="chat-start-form" class="p-4 border-b border-slate-100 shrink-0">
-            <p class="text-sm text-slate-600 mb-3">Spune-ne cum te cheamă și cum putem răspunde.</p>
-            <input type="text" id="chat-name" placeholder="Nume" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm mb-2 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="150">
-            <input type="email" id="chat-email" placeholder="Email" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm mb-3 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="150">
-            <button type="button" id="chat-start-btn" class="w-full rounded-xl bg-primary-blue text-white py-2.5 text-sm font-semibold hover:opacity-95">Pornește conversația</button>
+            <p class="text-sm text-slate-600 mb-3"><?php echo htmlspecialchars(t('chat_intro', 'Spune-ne cum te cheamă și cum putem răspunde.'), ENT_QUOTES, 'UTF-8'); ?></p>
+            <input type="text" id="chat-name" placeholder="<?php echo htmlspecialchars(t('chat_name', 'Nume'), ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm mb-2 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="150">
+            <input type="email" id="chat-email" placeholder="<?php echo htmlspecialchars(t('chat_email', 'Email'), ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm mb-3 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="150">
+            <button type="button" id="chat-start-btn" class="w-full rounded-xl bg-primary-blue text-white py-2.5 text-sm font-semibold hover:opacity-95"><?php echo htmlspecialchars(t('chat_start', 'Pornește conversația'), ENT_QUOTES, 'UTF-8'); ?></button>
         </div>
         <div id="chat-thread-wrap" class="hidden flex-1 flex flex-col min-h-0">
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 text-sm"></div>
             <div class="p-3 border-t border-slate-100 shrink-0">
                 <div class="flex gap-2">
-                    <textarea id="chat-input" placeholder="Scrie mesajul..." rows="2" class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm resize-none focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="4000"></textarea>
-                    <button type="button" id="chat-send-btn" class="self-end rounded-xl bg-primary-blue text-white px-4 py-2 text-sm font-semibold hover:opacity-95 shrink-0">Trimite</button>
+                    <textarea id="chat-input" placeholder="<?php echo htmlspecialchars(t('chat_placeholder', 'Scrie mesajul...'), ENT_QUOTES, 'UTF-8'); ?>" rows="2" class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm resize-none focus:border-primary-blue focus:ring-1 focus:ring-primary-blue" maxlength="4000"></textarea>
+                    <button type="button" id="chat-send-btn" class="self-end rounded-xl bg-primary-blue text-white px-4 py-2 text-sm font-semibold hover:opacity-95 shrink-0"><?php echo htmlspecialchars(t('chat_send', 'Trimite'), ENT_QUOTES, 'UTF-8'); ?></button>
                 </div>
             </div>
         </div>
