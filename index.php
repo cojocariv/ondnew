@@ -75,6 +75,7 @@ $contact = $site_data['contact'] ?? [];
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ro_RO">
     <link rel="canonical" href="https://ondsolutions.md/">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
