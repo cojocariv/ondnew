@@ -4,6 +4,9 @@ data/site_data.json
 # Parola admin – fiecare server are propria parolă
 admin/config.php
 
+# Credențiale Google OAuth – nu le comite niciodată
+client/config.php
+
 # Opțional: fișiere locale / IDE
 .DS_Store
 Thumbs.db

@@ -1,0 +1,18 @@
+<?php
+/**
+ * Config Cabinet Client (Google OAuth).
+ *
+ * Copiază acest fișier ca config.php și completează cu datele din Google Cloud Console.
+ * client/config.php nu trebuie comis în Git (e în .gitignore).
+ *
+ * În Google Cloud Console: OAuth Client de tip "Web application".
+ * Authorized redirect URI: https://ondsolutions.md/client/oauth_callback.php
+ */
+
+define('GOOGLE_CLIENT_ID', 'TU_CLIENT_ID.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_SECRET', 'TU_CLIENT_SECRET');
+
+define('GOOGLE_REDIRECT_URI', 'https://ondsolutions.md/client/oauth_callback.php');
+
+// Domenii permise pentru email (gol = orice). Exemplu: ['ondsolutions.md']
+define('CLIENT_ALLOWED_EMAIL_DOMAINS', []);
