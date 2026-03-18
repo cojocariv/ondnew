@@ -6,6 +6,7 @@ return [
     'nav_about' => 'Despre noi',
     'nav_contact' => 'Contact',
     'btn_request_quote' => 'Solicită ofertă',
+    'nav_client_area' => 'Cabinet client',
 
     'hero_kicker' => 'Infrastructură cloud & soluții IT',
     'hero_title1' => 'Cloud Infrastructure &',

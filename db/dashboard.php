@@ -72,6 +72,7 @@ if ($tableExists) {
                 </a>
             </div>
             <div class="flex items-center gap-3">
+                <a href="clients.php" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Clienți cabinet</a>
                 <a href="cabinet/conversations.php" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Cabinet chat</a>
                 <a href="install_client_portal.php" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Instalare cabinet clienți</a>
                 <a href="../index.php" target="_blank" class="text-sm font-medium text-slate-600 hover:text-primary-blue">Site</a>

@@ -6,6 +6,7 @@ return [
     'nav_about' => 'О нас',
     'nav_contact' => 'Контакты',
     'btn_request_quote' => 'Запросить предложение',
+    'nav_client_area' => 'Личный кабинет',
 
     'hero_kicker' => 'Облачная инфраструктура и IT-решения',
     'hero_title1' => 'Cloud Infrastructure &',

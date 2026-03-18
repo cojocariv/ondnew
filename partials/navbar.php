@@ -15,6 +15,7 @@
             <a href="?lang=ro" class="text-sm font-medium <?php echo ($lang ?? 'ro') === 'ro' ? 'text-primary-blue' : 'text-slate-500 hover:text-slate-700'; ?>">RO</a>
             <span class="text-slate-300">|</span>
             <a href="?lang=ru" class="text-sm font-medium <?php echo ($lang ?? 'ro') === 'ru' ? 'text-primary-blue' : 'text-slate-500 hover:text-slate-700'; ?>">RU</a>
+            <a href="client/" class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-200 hover:border-primary-blue hover:text-primary-blue hover:bg-slate-50"><?php echo htmlspecialchars(t('nav_client_area', 'Cabinet client'), ENT_QUOTES, 'UTF-8'); ?></a>
             <a href="#contact" class="rounded-lg bg-primary-blue px-4 py-2.5 text-sm font-semibold text-white shadow-primary transition-all duration-200 hover:scale-[1.02] hover:shadow-primary-lg active:scale-[0.98]"><?php echo htmlspecialchars(t('btn_request_quote', 'Solicită ofertă'), ENT_QUOTES, 'UTF-8'); ?></a>
         </div>
     </nav>
