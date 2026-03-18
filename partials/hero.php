@@ -22,10 +22,9 @@
             <a href="#services" class="btn-secondary rounded-xl border-2 border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 transition-all duration-200 hover:border-primary-blue hover:text-primary-blue hover:scale-[1.02] active:scale-[0.98]"><?php echo htmlspecialchars(t('btn_see_services', 'Vezi servicii'), ENT_QUOTES, 'UTF-8'); ?></a>
         </div>
         <div class="reveal mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500">
-            <?php $h = $site_data['hero'] ?? []; ?>
-            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> <?php echo htmlspecialchars($h['badge_1'] ?? t('badge_uptime', 'Uptime 99,9%+'), ENT_QUOTES, 'UTF-8'); ?></span>
-            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary-blue"></span> <?php echo htmlspecialchars($h['badge_2'] ?? t('badge_migration', 'Migrare inclusă'), ENT_QUOTES, 'UTF-8'); ?></span>
-            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars($h['badge_3'] ?? t('badge_rdp', 'Acces RDP/VPN'), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> <?php echo htmlspecialchars(t('badge_uptime', 'Uptime 99,9%+'), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-primary-blue"></span> <?php echo htmlspecialchars(t('badge_migration', 'Migrare inclusă'), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-cyan-500"></span> <?php echo htmlspecialchars(t('badge_rdp', 'Acces RDP/VPN'), ENT_QUOTES, 'UTF-8'); ?></span>
         </div>
     </div>
 </section>

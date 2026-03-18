@@ -219,16 +219,21 @@ $contact = $site_data['contact'] ?? [];
             $hosting = $site_data['hosting'] ?? [];
             foreach (array_slice($hosting, 0, 3) as $i => $plan):
                 $is_featured = ($i === 1);
+                $plan_name = t('hosting_plan_' . $i . '_name', $plan['name'] ?? '');
+                $plan_desc = t('hosting_plan_' . $i . '_description', $plan['description'] ?? '');
+                $plan_note = t('hosting_plan_' . $i . '_price_note', $plan['price_note'] ?? '');
+                $plan_features_raw = t('hosting_plan_' . $i . '_features', implode('|', $plan['features'] ?? []));
+                $plan_features = $plan_features_raw !== '' ? explode('|', $plan_features_raw) : ($plan['features'] ?? []);
             ?>
             <article class="reveal pricing-card rounded-2xl border-2 p-6 <?php echo $is_featured ? 'featured border-primary-blue bg-white' : 'border-slate-200 bg-white'; ?>">
                 <?php if ($is_featured): ?><p class="text-xs font-semibold uppercase text-primary-blue mb-2"><?php echo htmlspecialchars(t('pricing_recommended'), ENT_QUOTES, 'UTF-8'); ?></p><?php endif; ?>
-                <h3 class="font-heading text-xl font-bold text-slate-900"><?php echo htmlspecialchars($plan['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></h3>
-                <p class="mt-1 text-sm text-slate-600"><?php echo htmlspecialchars($plan['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                <h3 class="font-heading text-xl font-bold text-slate-900"><?php echo htmlspecialchars($plan_name, ENT_QUOTES, 'UTF-8'); ?></h3>
+                <p class="mt-1 text-sm text-slate-600"><?php echo htmlspecialchars($plan_desc, ENT_QUOTES, 'UTF-8'); ?></p>
                 <p class="mt-4 text-3xl font-bold text-slate-900"><?php echo (int)($plan['price'] ?? 0); ?> <span class="text-base font-normal text-slate-500"><?php echo htmlspecialchars(t('pricing_per_month'), ENT_QUOTES, 'UTF-8'); ?></span></p>
-                <p class="text-xs text-slate-500"><?php echo htmlspecialchars($plan['price_note'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="text-xs text-slate-500"><?php echo htmlspecialchars($plan_note, ENT_QUOTES, 'UTF-8'); ?></p>
                 <ul class="mt-4 space-y-2 text-sm text-slate-600">
-                    <?php foreach (($plan['features'] ?? []) as $f): ?>
-                    <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-primary-blue"></span> <?php echo htmlspecialchars($f, ENT_QUOTES, 'UTF-8'); ?></li>
+                    <?php foreach ($plan_features as $f): ?>
+                    <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-primary-blue"></span> <?php echo htmlspecialchars(is_string($f) ? $f : (string)$f, ENT_QUOTES, 'UTF-8'); ?></li>
                     <?php endforeach; ?>
                 </ul>
                 <a href="#contact" class="mt-6 block w-full rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 <?php echo $is_featured ? 'bg-primary-blue text-white hover:opacity-95 hover:scale-[1.02] active:scale-[0.98]' : 'border-2 border-slate-200 text-slate-700 hover:border-primary-blue hover:text-primary-blue'; ?>"><?php echo htmlspecialchars(t('btn_request_quote'), ENT_QUOTES, 'UTF-8'); ?></a>
@@ -237,7 +242,7 @@ $contact = $site_data['contact'] ?? [];
         </div>
         <div class="reveal mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 lg:p-8">
             <h3 class="font-heading text-lg font-bold text-slate-900"><?php echo htmlspecialchars(t('pricing_1c_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
-            <p class="mt-1 text-sm text-slate-600"><?php echo htmlspecialchars(t('pricing_1c_sub'), ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars($site_data['1c']['trial_badge'] ?? 'Test 7 zile', ENT_QUOTES, 'UTF-8'); ?>.</p>
+            <p class="mt-1 text-sm text-slate-600"><?php echo htmlspecialchars(t('pricing_1c_sub'), ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars(t('1c_trial_badge', $site_data['1c']['trial_badge'] ?? 'Test 7 zile'), ENT_QUOTES, 'UTF-8'); ?>.</p>
             <div class="mt-4 grid gap-4 sm:grid-cols-3">
                 <div>
                     <label class="text-xs text-slate-600"><?php echo htmlspecialchars(t('label_users'), ENT_QUOTES, 'UTF-8'); ?></label>
@@ -256,7 +261,7 @@ $contact = $site_data['contact'] ?? [];
                 </div>
             </div>
             <p class="mt-4 text-2xl font-bold text-slate-900"><?php echo htmlspecialchars(t('pricing_estimate'), ENT_QUOTES, 'UTF-8'); ?> <span id="fg-price"><?php echo (int)($site_data['1c']['min_price'] ?? 150); ?> lei</span><?php echo htmlspecialchars(t('pricing_per_month_short'), ENT_QUOTES, 'UTF-8'); ?></p>
-            <p class="mt-2 text-xs text-slate-500"><?php echo htmlspecialchars($site_data['1c']['migrare_note'] ?? 'Migrare, VPN/RDP și consultanță incluse.', ENT_QUOTES, 'UTF-8'); ?></p>
+            <p class="mt-2 text-xs text-slate-500"><?php echo htmlspecialchars(t('1c_migrare_note', $site_data['1c']['migrare_note'] ?? 'Migrare, VPN/RDP și consultanță incluse.'), ENT_QUOTES, 'UTF-8'); ?></p>
             <a href="#contact" class="mt-4 inline-block rounded-xl bg-primary-blue px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary-blue/30 transition-all hover:scale-[1.02] active:scale-[0.98]"><?php echo htmlspecialchars(t('btn_quote_detail'), ENT_QUOTES, 'UTF-8'); ?></a>
         </div>
     </div>
@@ -268,7 +273,7 @@ $contact = $site_data['contact'] ?? [];
             <div>
                 <p class="reveal text-sm font-semibold uppercase tracking-widest text-primary-blue"><?php echo htmlspecialchars(t('section_about'), ENT_QUOTES, 'UTF-8'); ?></p>
                 <h2 class="reveal font-heading mt-2 text-3xl font-bold text-slate-900 sm:text-4xl"><?php echo htmlspecialchars($company['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?></h2>
-                <p class="reveal mt-4 text-slate-600 leading-relaxed"><?php echo htmlspecialchars($company['footer_text'] ?? 'Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte din România și Europa.', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="reveal mt-4 text-slate-600 leading-relaxed"><?php echo htmlspecialchars(t('about_desc1', $company['footer_text'] ?? 'Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte.'), ENT_QUOTES, 'UTF-8'); ?></p>
                 <p class="reveal mt-4 text-slate-600"><?php echo htmlspecialchars(t('about_desc2'), ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div class="grid grid-cols-2 gap-4">
