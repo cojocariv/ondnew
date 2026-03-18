@@ -8,8 +8,8 @@
  */
 
 // IMPORTANT: completează cu valorile tale reale
-define('GOOGLE_CLIENT_ID', '547267303086-uapvgh1a4cqgi2mft4nj29i6ildgcfhf.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', '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');
+define('GOOGLE_CLIENT_ID', 'id');
+define('GOOGLE_CLIENT_SECRET', 'secret');
 
 // URL absolut către callback (trebuie să fie exact ca în Google Console)
 define('GOOGLE_REDIRECT_URI', 'https://ondsolutions.md/client/oauth_callback.php');
