@@ -98,6 +98,7 @@ return [
     'label_support' => 'Поддержка',
     'label_phone' => 'Телефон',
     'label_schedule' => 'График',
+    'contact_schedule' => 'Поддержка 24/7, Пн–Пт 9–17 по телефону',
     'label_firstname' => 'Имя',
     'label_lastname' => 'Фамилия',
     'label_email' => 'Email',

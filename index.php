@@ -324,7 +324,7 @@ $contact = $site_data['contact'] ?? [];
                     </div>
                     <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
                         <p class="text-xs font-semibold text-slate-500"><?php echo htmlspecialchars(t('label_schedule'), ENT_QUOTES, 'UTF-8'); ?></p>
-                        <p class="text-slate-900"><?php echo htmlspecialchars($contact['schedule'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p class="text-slate-900"><?php echo htmlspecialchars(t('contact_schedule', $contact['schedule'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                 </div>
             </div>
