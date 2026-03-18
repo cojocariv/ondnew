@@ -106,7 +106,7 @@ function money($amount, $currency) {
         <section class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
                 <h2 class="font-semibold text-slate-900">Serviciile mele</h2>
-                <a href="../#contact" class="text-sm font-semibold text-primary-blue hover:underline">Cere serviciu nou</a>
+                <a href="request_service.php" class="text-sm font-semibold text-primary-blue hover:underline">Cere serviciu nou</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm text-left">
