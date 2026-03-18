@@ -41,6 +41,43 @@ try {
     $adminEmail = 'sales@ondsolutions.md';
 }
 
+// Prețuri (din site_data.json) - mapate pe service code
+$priceByServiceId = [];
+$priceByServiceCode = [
+    'hosting' => 0,
+    'vps' => 0,
+    '1c' => 0,
+    'm365' => 0,
+];
+
+$getMinPrice = function ($arr, $key = 'price'): float {
+    if (!is_array($arr) || empty($arr)) return 0.0;
+    $prices = [];
+    foreach ($arr as $p) {
+        $val = 0.0;
+        if (is_array($p) && array_key_exists($key, $p)) {
+            $val = (float)($p[$key] ?? 0);
+        }
+        if ($val > 0) $prices[] = $val;
+    }
+    if (empty($prices)) return 0.0;
+    return (float)min($prices);
+};
+
+try {
+    $priceByServiceCode['hosting'] = $getMinPrice($site_data['hosting'] ?? [], 'price');
+    $priceByServiceCode['vps'] = $getMinPrice($site_data['vps'] ?? [], 'price');
+    $priceByServiceCode['1c'] = (float)(($site_data['1c']['min_price'] ?? null) ?: ($site_data['1c']['base_price'] ?? 0));
+} catch (Throwable $e) {
+    // dacă site_data nu conține chei, lăsăm prețurile la 0
+}
+
+foreach ($services as $s) {
+    $id = (int)($s['id'] ?? 0);
+    $code = (string)($s['code'] ?? '');
+    if ($id > 0) $priceByServiceId[$id] = (float)($priceByServiceCode[$code] ?? 0);
+}
+
 // Table existence (so we can show a friendly message)
 $requestsTableExists = false;
 try {
@@ -72,19 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $rows = [];
             foreach ($selected as $sid) {
-                $periodText = trim((string)($_POST['period_text'][$sid] ?? ''));
-                $pricePerUnit = fnum($_POST['price_per_unit'][$sid] ?? 0);
-                $amount = fnum($_POST['amount'][$sid] ?? 0);
-                $totalAmount = fnum($_POST['total_amount'][$sid] ?? 0);
+                $periodMonths = (int)($_POST['period_months'][$sid] ?? 0);
+                $pricePerUnit = (float)($priceByServiceId[$sid] ?? 0);
 
-                if ($periodText === '') {
-                    $error = 'Completează „Perioada” pentru fiecare serviciu selectat.';
+                if ($periodMonths < 1 || $periodMonths > 10) {
+                    $error = 'Selectează o „Perioadă” între 1 și 10 luni pentru fiecare serviciu.';
                     break;
                 }
-                if ($pricePerUnit <= 0 || $amount < 0 || $totalAmount <= 0) {
-                    $error = 'Completează „Preț”, „Suma” și „Suma totală” cu valori corecte.';
+
+                if ($pricePerUnit <= 0) {
+                    $error = 'Prețul nu este disponibil pentru unul dintre servicii (contactează administratorul).';
                     break;
                 }
+
+                $periodText = $periodMonths . ' luni';
+                $amount = (float)$periodMonths; // păstrăm câmpul „amount” ca număr de luni
+                $totalAmount = $pricePerUnit * $periodMonths;
 
                 $rows[] = [
                     'service_id' => $sid,
@@ -132,7 +172,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             "• {$s['name']}" . (!empty($s['code']) ? " ({$s['code']})" : '') .
                             "\n  Perioada: {$r['period_text']}" .
                             "\n  Preț: " . number_format((float)$r['price_per_unit'], 2, '.', ' ') . " {$r['currency']}" .
-                            "\n  Suma: " . number_format((float)$r['amount'], 2, '.', ' ') . " {$r['currency']}" .
                             "\n  Suma totală: " . number_format((float)$r['total_amount'], 2, '.', ' ') . " {$r['currency']}";
                     }
 
@@ -210,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="flex items-start justify-between gap-4 flex-wrap mb-5">
             <div>
                 <h1 class="text-2xl font-bold text-slate-900">Cere serviciu nou</h1>
-                <p class="mt-1 text-sm text-slate-600">Bifează serviciile dorite și completează perioada și valorile solicitate.</p>
+                <p class="mt-1 text-sm text-slate-600">Bifează serviciile dorite și alege perioada (1-10 luni). Suma totală se calculează automat.</p>
             </div>
             <div class="text-sm text-slate-500">
                 Client ID: <span class="font-mono"><?php echo (int)$uid; ?></span>
@@ -231,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <section class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-2">
                 <h2 class="font-semibold text-slate-900">Selectează servicii</h2>
-                <span class="text-xs text-slate-500">Preț/Sume în MDL</span>
+                <span class="text-xs text-slate-500">Preț (lei / lună)</span>
             </div>
 
             <form method="post" class="px-5 py-4">
@@ -245,14 +284,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <th class="px-3 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Serviciu</th>
                                 <th class="px-3 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Perioada</th>
                                 <th class="px-3 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Preț</th>
-                                <th class="px-3 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Suma</th>
                                 <th class="px-3 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Suma totală</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                         <?php if (empty($services)): ?>
                             <tr>
-                                <td colspan="6" class="px-3 py-10 text-center text-slate-500">
+                                <td colspan="5" class="px-3 py-10 text-center text-slate-500">
                                     Nu există servicii în catalog.
                                 </td>
                             </tr>
@@ -274,34 +312,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <?php endif; ?>
                                     </td>
                                     <td class="px-3 py-3 align-top">
-                                        <input type="text"
-                                            name="period_text[<?php echo (int)$s['id']; ?>]"
-                                            placeholder="ex. 3 luni / 01.04-30.04"
-                                            class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                                        <?php $price = (float)($priceByServiceId[(int)$s['id']] ?? 0.0); ?>
+                                        <select
+                                            name="period_months[<?php echo (int)$s['id']; ?>]"
+                                            class="period-select w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
                                             disabled
                                         >
+                                            <?php for ($m = 1; $m <= 10; $m++): ?>
+                                                <option value="<?php echo (int)$m; ?>" <?php echo $m === 3 ? 'selected' : ''; ?>><?php echo (int)$m; ?></option>
+                                            <?php endfor; ?>
+                                        </select>
                                     </td>
                                     <td class="px-3 py-3 align-top">
-                                        <input type="number" step="0.01" min="0"
-                                            name="price_per_unit[<?php echo (int)$s['id']; ?>]"
-                                            value="0"
-                                            class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
-                                            disabled
-                                        >
+                                        <span class="inline-flex items-center gap-1 text-sm font-medium text-slate-900">
+                                            <?php if ($price > 0): ?>
+                                                <?php echo number_format($price, 2, ',', ' '); ?> <span class="text-xs text-slate-500">lei / lună</span>
+                                            <?php else: ?>
+                                                <span class="text-slate-400">n/a</span>
+                                            <?php endif; ?>
+                                        </span>
                                     </td>
                                     <td class="px-3 py-3 align-top">
-                                        <input type="number" step="0.01" min="0"
-                                            name="amount[<?php echo (int)$s['id']; ?>]"
-                                            value="0"
-                                            class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
-                                            disabled
-                                        >
-                                    </td>
-                                    <td class="px-3 py-3 align-top">
-                                        <input type="number" step="0.01" min="0"
-                                            name="total_amount[<?php echo (int)$s['id']; ?>]"
-                                            value="0"
-                                            class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                                        <input
+                                            type="text"
+                                            class="total-amount w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                                            value="0,00"
+                                            data-price="<?php echo (float)$price; ?>"
                                             disabled
                                         >
                                     </td>
@@ -326,18 +362,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script>
         (function () {
-            function syncRow(row, checked) {
-                var inputs = row.querySelectorAll('input[type="text"], input[type="number"]');
-                inputs.forEach(function (i) { i.disabled = !checked; });
+            function updateRow(tr) {
+                var cb = tr.querySelector('input.service-select[type="checkbox"]');
+                var periodSel = tr.querySelector('select.period-select');
+                var totalInput = tr.querySelector('input.total-amount');
+                if (!periodSel || !totalInput) return;
+
+                var checked = cb ? cb.checked : false;
+                periodSel.disabled = !checked;
+
+                var price = parseFloat(totalInput.dataset.price || '0');
+                if (!checked) {
+                    totalInput.value = '0,00';
+                    return;
+                }
+
+                var months = parseInt(periodSel.value, 10) || 1;
+                if (!isFinite(price) || price <= 0) {
+                    totalInput.value = '0,00';
+                    return;
+                }
+
+                var total = price * months;
+                totalInput.value = total.toFixed(2).replace('.', ',');
             }
 
             document.querySelectorAll('tr').forEach(function (tr) {
                 var cb = tr.querySelector('input.service-select[type="checkbox"]');
                 if (!cb) return;
-                syncRow(tr, cb.checked);
-                cb.addEventListener('change', function () {
-                    syncRow(tr, cb.checked);
-                });
+                updateRow(tr);
+                cb.addEventListener('change', function () { updateRow(tr); });
+                var periodSel = tr.querySelector('select.period-select');
+                if (periodSel) periodSel.addEventListener('change', function () { updateRow(tr); });
             });
         })();
     </script>
