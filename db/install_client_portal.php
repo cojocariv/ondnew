@@ -30,10 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm'])) {
 }
 
 $tablesOk = false;
+$requestsOk = false;
 try {
     $c = $pdo->query("SELECT 1 FROM information_schema.tables WHERE table_name = 'client_users'");
     $tablesOk = $c && $c->fetch();
 } catch (Throwable $e) {}
+
+try {
+    $c2 = $pdo->query("SELECT 1 FROM information_schema.tables WHERE table_name = 'client_service_requests'");
+    $requestsOk = $c2 && $c2->fetch();
+} catch (Throwable $e) {}
+
+$needsInstall = !$requestsOk;
 ?>
 <!DOCTYPE html>
 <html lang="ro">
@@ -59,8 +67,21 @@ try {
                 <div class="rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm mb-4"><?php echo $error; ?></div>
             <?php endif; ?>
 
-            <?php if ($tablesOk): ?>
-                <p class="text-slate-600 text-sm">Tabelele există deja. Mergi la <a class="text-primary-blue hover:underline" href="../client/">/client/</a>.</p>
+            <?php if ($tablesOk && !$needsInstall): ?>
+                <p class="text-slate-600 text-sm">
+                    Tabelele Cabinet Client există deja. Mergi la
+                    <a class="text-primary-blue hover:underline" href="../client/">/client/</a>.
+                </p>
+            <?php elseif ($tablesOk && $needsInstall): ?>
+                <p class="text-slate-600 text-sm mb-4">
+                    Cabinet Client este instalat, dar lipsește tabelul pentru cererile de servicii.
+                    Apasă butonul de mai jos ca să îl creezi (SQL-ul e idempotent).
+                </p>
+                <form method="post">
+                    <button type="submit" name="confirm" value="1" class="rounded-xl bg-primary-blue text-white px-4 py-2.5 text-sm font-semibold hover:opacity-95">
+                        Instalează tabelele lipsă
+                    </button>
+                </form>
             <?php else: ?>
                 <form method="post">
                     <button type="submit" name="confirm" value="1" class="rounded-xl bg-primary-blue text-white px-4 py-2.5 text-sm font-semibold hover:opacity-95">Instalează tabelele</button>

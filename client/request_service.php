@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!client_check_csrf($_POST['csrf'] ?? '')) {
         $error = 'Token CSRF invalid. Reîncarcă pagina și încearcă din nou.';
     } else if (!$requestsTableExists) {
-        $error = 'Tipul de cereri nu este instalat în baza de date. Verifică instalarea Cabinet Client (admin).';
+        $error = 'Tipul de cereri nu este instalat în baza de date. Cere adminului să ruleze instalarea: /db/install_client_portal.php';
     } else {
         $selected = $_POST['selected_services'] ?? [];
         if (!is_array($selected)) $selected = [];
