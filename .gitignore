@@ -1,0 +1,10 @@
+# Date editate din admin panel – nu le suprascrie la deploy
+data/site_data.json
+
+# Parola admin – fiecare server are propria parolă
+admin/config.php
+
+# Opțional: fișiere locale / IDE
+.DS_Store
+Thumbs.db
+*.log
