@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
         section[id] { scroll-margin-top: 90px; }
 
+<<<<<<< HEAD
         .site-logo {
             height: 2.75rem;
             width: auto;
@@ -104,6 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: auto;
             max-width: 180px;
             object-fit: contain;
+=======
+        .logo-glow {
+            background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #F97316 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+>>>>>>> 8416175b7df9595bbc6c6929734cc4a8aa92ffd5
         }
         .glass { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); }
         .glass-soft { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); }
@@ -208,8 +214,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- HEADER -->
 <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl shadow-sm">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8">
+<<<<<<< HEAD
         <a href="#top" class="flex items-center group">
             <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($site_data['company']['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?>" class="site-logo transition group-hover:scale-[1.02]">
+=======
+        <a href="#top" class="flex items-center gap-3 group">
+            <div class="logo-glow flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white transition group-hover:scale-105">
+                S
+            </div>
+            <div>
+                <span class="block text-xs font-bold uppercase tracking-widest text-slate-800"><?php echo htmlspecialchars($site_data['company']['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="block text-[10px] text-slate-500"><?php echo htmlspecialchars($site_data['company']['tagline'] ?? 'Hosting 1C • VPS • Domenii', ENT_QUOTES, 'UTF-8'); ?></span>
+            </div>
+>>>>>>> 8416175b7df9595bbc6c6929734cc4a8aa92ffd5
         </a>
 
         <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
@@ -595,8 +612,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="grid gap-6 md:grid-cols-[2fr,1fr,1fr]">
             <?php $company = $site_data['company'] ?? []; ?>
             <div>
+<<<<<<< HEAD
                 <div class="mb-2">
                     <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($company['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?>" class="site-logo-footer">
+=======
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="logo-glow flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold text-white">S</div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-800"><?php echo htmlspecialchars($company['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?></span>
+>>>>>>> 8416175b7df9595bbc6c6929734cc4a8aa92ffd5
                 </div>
                 <p class="text-xs text-slate-600 max-w-sm"><?php echo htmlspecialchars($company['footer_text'] ?? 'Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte din România și Europa.', ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
