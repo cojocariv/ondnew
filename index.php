@@ -57,6 +57,7 @@ $host = $_SERVER['HTTP_HOST'] ?? 'smartsolutions.md';
 $site_base = $scheme . '://' . preg_replace('/[^a-zA-Z0-9.\-:]/', '', $host);
 $canonical_url = rtrim($site_base, '/') . '/';
 $og_image = rtrim($site_base, '/') . '/assets/LOGO/transparent%20logo.png';
+$hero_video_url = 'https://cojocaristorage.blob.core.windows.net/smartsolutions/business-web.mp4';
 $json_ld = [
     '@context' => 'https://schema.org',
     '@graph' => [
@@ -217,12 +218,18 @@ $json_ld = [
             inset: 0;
             z-index: 0;
         }
-        .hero-bg img {
+        .hero-bg video {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 65% center;
+            object-position: center;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-bg video { display: none; }
+            .hero-bg {
+                background: url('assets/woman-typing-laptop.png') center / cover no-repeat;
+            }
         }
         .hero-bg::after {
             content: '';
@@ -597,7 +604,9 @@ $json_ld = [
     <!-- HERO -->
     <section class="hero-section relative overflow-hidden border-b border-slate-200/60" aria-labelledby="hero-title">
         <div class="hero-bg" aria-hidden="true">
-            <img src="assets/woman-typing-laptop.png" alt="" loading="eager" decoding="async">
+            <video autoplay muted loop playsinline preload="auto" poster="assets/woman-typing-laptop.png">
+                <source src="<?php echo htmlspecialchars($hero_video_url, ENT_QUOTES, 'UTF-8'); ?>" type="video/mp4">
+            </video>
         </div>
         <div class="hero-inner mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1.1fr,0.95fr] lg:items-center lg:px-8 lg:py-20">
             <div class="hero-content-inner flex flex-col justify-center" data-reveal>
