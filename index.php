@@ -45,13 +45,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$company_seo = $site_data['company'] ?? [];
+$contact_seo = $site_data['contact'] ?? [];
+$company_name = $company_seo['name'] ?? 'Smart Solutions';
+$seo_title = 'Hosting 1C în cloud, VPS și dezvoltare site-uri | ' . $company_name;
+$seo_description = 'Hosting 1C în cloud cu migrare inclusă, servere VPS/VDS în Europa, dezvoltare site-uri web și automatizări Zapier. ' . $company_name . ' — soluții IT pentru companii din Moldova și România.';
+$seo_keywords = 'hosting 1C, 1C cloud, migrare 1C, VPS, VDS, dezvoltare site-uri, hosting web, automatizări Zapier, Smart Solutions, Moldova';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'smartsolutions.md';
+$site_base = $scheme . '://' . preg_replace('/[^a-zA-Z0-9.\-:]/', '', $host);
+$canonical_url = rtrim($site_base, '/') . '/';
+$og_image = rtrim($site_base, '/') . '/assets/LOGO/transparent%20logo.png';
+$json_ld = [
+    '@context' => 'https://schema.org',
+    '@graph' => [
+        [
+            '@type' => 'Organization',
+            '@id' => $canonical_url . '#organization',
+            'name' => $company_name,
+            'url' => $canonical_url,
+            'logo' => rtrim($site_base, '/') . '/assets/LOGO/transparent%20logo.png',
+            'description' => $company_seo['footer_text'] ?? $seo_description,
+            'email' => $contact_seo['email_sales'] ?? 'sales@smartsolutions.md',
+            'telephone' => $contact_seo['phone'] ?? '',
+        ],
+        [
+            '@type' => 'WebSite',
+            '@id' => $canonical_url . '#website',
+            'url' => $canonical_url,
+            'name' => $company_name,
+            'inLanguage' => 'ro-MD',
+            'publisher' => ['@id' => $canonical_url . '#organization'],
+        ],
+        [
+            '@type' => 'ProfessionalService',
+            '@id' => $canonical_url . '#service',
+            'name' => $company_name,
+            'url' => $canonical_url,
+            'description' => $seo_description,
+            'areaServed' => ['MD', 'RO'],
+            'serviceType' => ['Hosting 1C', 'VPS / VDS', 'Dezvoltare site-uri', 'Automatizări Zapier'],
+        ],
+    ],
+];
 ?>
 <!DOCTYPE html>
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>Hosting 1C & VPS modern | Smart Solutions</title>
+    <title><?php echo htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8'); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<?php echo htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="author" content="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="<?php echo htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="icon" href="assets/LOGO/transparent%20logo.png" type="image/png">
+    <meta name="theme-color" content="#2563EB">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ro_MD">
+    <meta property="og:site_name" content="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta property="og:title" content="<?php echo htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta property="og:url" content="<?php echo htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($og_image, ENT_QUOTES, 'UTF-8'); ?>">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="twitter:description" content="<?php echo htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="twitter:image" content="<?php echo htmlspecialchars($og_image, ENT_QUOTES, 'UTF-8'); ?>">
+
+    <script type="application/ld+json"><?php echo json_encode($json_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -503,11 +569,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- HEADER -->
 <header id="site-header" class="site-header sticky top-0 z-50">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8">
-        <a href="#top" class="flex items-center group">
+        <a href="#top" class="flex items-center group" aria-label="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?> — pagina principală">
             <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($site_data['company']['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?>" class="site-logo transition group-hover:scale-[1.02]">
         </a>
 
-        <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+        <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex" aria-label="Navigare principală">
             <a href="#1c" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Hosting 1C</a>
             <a href="#dezvoltare" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Dezvoltare</a>
             <a href="#vps" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">VPS / VDS</a>
@@ -529,14 +595,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main id="top" class="pb-20">
 
     <!-- HERO -->
-    <section class="hero-section relative overflow-hidden border-b border-slate-200/60">
+    <section class="hero-section relative overflow-hidden border-b border-slate-200/60" aria-labelledby="hero-title">
         <div class="hero-bg" aria-hidden="true">
-            <img src="assets/woman-typing-laptop.png" alt="">
+            <img src="assets/woman-typing-laptop.png" alt="" loading="eager" decoding="async">
         </div>
         <div class="hero-inner mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1.1fr,0.95fr] lg:items-center lg:px-8 lg:py-20">
             <div class="hero-content-inner flex flex-col justify-center" data-reveal>
-                <h1 class="mb-4 text-s font-bold uppercase tracking-[0.3em] text-ihcBlue">Hosting 1C în cloud</h1>
-                <h1 class="mb-5 text-4xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-5xl lg:text-[2.75rem]">
+                <p class="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-ihcBlue">Hosting 1C în cloud</p>
+                <h1 id="hero-title" class="mb-5 text-4xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-5xl lg:text-[2.75rem]">
                     1C în cloud, <span class="gradient-text">accesibil de oriunde</span> și oricând.
                 </h1>
                 <p class="mb-6 max-w-lg text-base text-slate-600 leading-relaxed">
@@ -615,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
             <p class="section-kicker text-s font-bold uppercase text-ihcBlue">Servicii 1C</p>
             <div class="mt-6 section-photo section-photo-banner max-w-4xl" data-reveal>
-                <img src="assets/business-man.jpg" alt="Soluții cloud pentru business și contabilitate">
+                <img src="assets/business-man.jpg" alt="Contabilitate și business pe hosting 1C securizat" loading="lazy" decoding="async">
             </div>
             <div class="mt-10 grid gap-10 lg:grid-cols-[1.05fr,1fr] lg:gap-14">
                 <div data-reveal>
@@ -697,7 +763,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- DEZVOLTARE SITE-URI -->
     <section id="dezvoltare" class="dev-section border-b border-slate-200/60">
         <div class="dev-section-bg" aria-hidden="true">
-            <img src="assets/code-testing-.jpg" alt="">
+            <img src="assets/code-testing-.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="dev-section-inner mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
             <p class="section-kicker text-xs font-bold uppercase text-ihcBlue">Dezvoltare web</p>
@@ -828,7 +894,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="space-y-4" data-reveal>
                     <div class="section-photo section-photo-banner">
-                        <img src="assets/ai-nuclear-energy.jpg" alt="Automatizare procese și fluxuri de lucru">
+                        <img src="assets/ai-nuclear-energy.jpg" alt="Automatizare procese și fluxuri de lucru" loading="lazy" decoding="async">
                     </div>
                     <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong">
                     <h3 class="text-sm font-bold text-slate-900">Exemplu de utilizare</h3>
@@ -847,7 +913,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- CONTACT -->
     <section id="contact" class="contact-section border-t border-slate-200/60">
         <div class="contact-section-bg" aria-hidden="true">
-            <img src="assets/contact-us-word.jpg" alt="">
+            <img src="assets/contact-us-word.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="contact-section-inner mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
             <p class="section-kicker text-xs font-bold uppercase text-ihcBlue">Contact</p>

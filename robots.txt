@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /phpmailer/
+
+Sitemap: https://smartsolutions.md/sitemap.xml
