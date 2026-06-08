@@ -6,6 +6,7 @@ require __DIR__ . '/phpmailer/src/Exception.php';
 require __DIR__ . '/phpmailer/src/PHPMailer.php';
 require __DIR__ . '/phpmailer/src/SMTP.php';
 require __DIR__ . '/includes/site_data.php';
+require __DIR__ . '/includes/i18n.php';
 $contact_success = '';
 $contact_error   = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email  = isset($_POST['email'])  ? trim($_POST['email'])  : '';
     $mesaj  = isset($_POST['mesaj'])  ? trim($_POST['mesaj'])  : '';
     if ($nume === '' || $email === '' || $mesaj === '') {
-        $contact_error = 'Te rugăm să completezi numele, emailul și mesajul.';
+        $contact_error = t('contact_error_required');
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $contact_error = 'Adresa de email nu este validă.';
+        $contact_error = t('contact_error_invalid_email');
     } else {
         $mail = new PHPMailer(true);
         try {
@@ -37,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $body .= "Mesaj:\r\n{$mesaj}\r\n";
             $mail->Body = $body;
             $mail->send();
-            $contact_success = 'Mesajul a fost trimis cu succes. Îți vom răspunde în cel mai scurt timp.';
+            $contact_success = t('contact_success');
             $nume = $email = $mesaj = '';
         } catch (Exception $e) {
-            $contact_error = 'A apărut o eroare la trimiterea mesajului: ' .
+            $contact_error = t('contact_error_send_prefix') .
                 htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
         }
     }
@@ -49,13 +50,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $company_seo = $site_data['company'] ?? [];
 $contact_seo = $site_data['contact'] ?? [];
 $company_name = $company_seo['name'] ?? 'Smart Solutions';
-$seo_title = 'Hosting 1C în cloud, VPS și dezvoltare site-uri | ' . $company_name;
-$seo_description = 'Hosting 1C în cloud cu migrare inclusă, servere VPS/VDS în Europa, dezvoltare site-uri web și automatizări Zapier. ' . $company_name . ' — soluții IT pentru companii din Moldova și România.';
-$seo_keywords = 'hosting 1C, 1C cloud, migrare 1C, VPS, VDS, dezvoltare site-uri, hosting web, automatizări Zapier, Smart Solutions, Moldova';
+$seo_title = t('seo_title', $company_name);
+$seo_description = t('seo_description', $company_name);
+$seo_keywords = t('seo_keywords');
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'smartsolutions.md';
 $site_base = $scheme . '://' . preg_replace('/[^a-zA-Z0-9.\-:]/', '', $host);
-$canonical_url = rtrim($site_base, '/') . '/';
+$canonical_url = rtrim($site_base, '/') . '/' . ($lang !== 'ro' ? '?lang=' . urlencode($lang) : '');
+$hreflang_urls = [
+    'ro' => rtrim($site_base, '/') . '/',
+    'en' => rtrim($site_base, '/') . '/?lang=en',
+    'ru' => rtrim($site_base, '/') . '/?lang=ru',
+];
+$scenario_details = [
+    'firma-mica' => [
+        'title' => t('scenario_firma_mica_title'),
+        'dotClass' => 'bg-ihcBlue',
+        'lead' => t('scenario_firma_mica_lead'),
+        'bullets' => [t('scenario_firma_mica_b1'), t('scenario_firma_mica_b2'), t('scenario_firma_mica_b3'), t('scenario_firma_mica_b4'), t('scenario_firma_mica_b5')],
+    ],
+    'grup' => [
+        'title' => t('scenario_grup_title'),
+        'dotClass' => 'bg-ihcOrange',
+        'lead' => t('scenario_grup_lead'),
+        'bullets' => [t('scenario_grup_b1'), t('scenario_grup_b2'), t('scenario_grup_b3'), t('scenario_grup_b4'), t('scenario_grup_b5')],
+    ],
+    'crm' => [
+        'title' => t('scenario_crm_title'),
+        'dotClass' => 'bg-emerald-500',
+        'lead' => t('scenario_crm_lead'),
+        'bullets' => [t('scenario_crm_b1'), t('scenario_crm_b2'), t('scenario_crm_b3'), t('scenario_crm_b4'), t('scenario_crm_b5')],
+    ],
+];
 $og_image = rtrim($site_base, '/') . '/assets/LOGO/transparent%20logo.png';
 $hero_video_url = 'https://cojocaristorage.blob.core.windows.net/smartsolutions/business-web.mp4';
 $json_ld = [
@@ -76,7 +102,7 @@ $json_ld = [
             '@id' => $canonical_url . '#website',
             'url' => $canonical_url,
             'name' => $company_name,
-            'inLanguage' => 'ro-MD',
+            'inLanguage' => lang_schema(),
             'publisher' => ['@id' => $canonical_url . '#organization'],
         ],
         [
@@ -86,13 +112,13 @@ $json_ld = [
             'url' => $canonical_url,
             'description' => $seo_description,
             'areaServed' => ['MD', 'RO'],
-            'serviceType' => ['Hosting 1C', 'VPS / VDS', 'Dezvoltare site-uri', 'Automatizări Zapier'],
+            'serviceType' => $L['json_ld_service_types'] ?? [],
         ],
     ],
 ];
 ?>
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="<?php echo htmlspecialchars(lang_html(), ENT_QUOTES, 'UTF-8'); ?>">
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8'); ?></title>
@@ -102,11 +128,15 @@ $json_ld = [
     <meta name="author" content="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="<?php echo htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="alternate" hreflang="ro" href="<?php echo htmlspecialchars($hreflang_urls['ro'], ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="alternate" hreflang="en" href="<?php echo htmlspecialchars($hreflang_urls['en'], ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="alternate" hreflang="ru" href="<?php echo htmlspecialchars($hreflang_urls['ru'], ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="alternate" hreflang="x-default" href="<?php echo htmlspecialchars($hreflang_urls['ro'], ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="icon" href="assets/LOGO/transparent%20logo.png" type="image/png">
     <meta name="theme-color" content="#2563EB">
 
     <meta property="og:type" content="website">
-    <meta property="og:locale" content="ro_MD">
+    <meta property="og:locale" content="<?php echo htmlspecialchars(lang_og_locale(), ENT_QUOTES, 'UTF-8'); ?>">
     <meta property="og:site_name" content="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>">
     <meta property="og:title" content="<?php echo htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8'); ?>">
     <meta property="og:description" content="<?php echo htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8'); ?>">
@@ -569,6 +599,112 @@ $json_ld = [
             width: 1.25rem;
             height: 1.25rem;
         }
+
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.125rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            background: rgba(255, 255, 255, 0.85);
+            padding: 0.125rem;
+        }
+        .lang-switcher a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #64748b;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .lang-switcher a:hover { color: #2563EB; }
+        .lang-switcher a.is-active {
+            background: #2563EB;
+            color: #fff;
+        }
+
+        .mobile-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #334155;
+            cursor: pointer;
+            transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-menu-btn:hover {
+            border-color: rgba(37, 99, 235, 0.4);
+            color: #2563EB;
+        }
+        .mobile-menu-btn svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .mobile-menu-btn .icon-close { display: none; }
+        .mobile-menu-btn.is-open .icon-menu { display: none; }
+        .mobile-menu-btn.is-open .icon-close { display: block; }
+
+        .mobile-nav {
+            display: none;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .mobile-nav.is-open { display: block; }
+        .mobile-nav-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.75rem 1rem 1rem;
+        }
+        .mobile-nav a,
+        .mobile-nav button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 0.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .mobile-nav a:hover,
+        .mobile-nav button:hover {
+            background: rgba(241, 245, 249, 0.9);
+            color: #2563EB;
+        }
+        .mobile-nav-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .mobile-nav-cta button,
+        .mobile-nav-cta a {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-btn,
+            .mobile-nav { display: none !important; }
+        }
     </style>
 </head>
 <body class="text-slate-900 antialiased">
@@ -576,27 +712,59 @@ $json_ld = [
 <!-- HEADER -->
 <header id="site-header" class="site-header sticky top-0 z-50">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8">
-        <a href="#top" class="flex items-center group" aria-label="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?> — pagina principală">
+        <a href="#top" class="flex items-center group" aria-label="<?php echo htmlspecialchars(t('nav_aria_home', $company_name), ENT_QUOTES, 'UTF-8'); ?>">
             <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($site_data['company']['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?>" class="site-logo transition group-hover:scale-[1.02]">
         </a>
 
-        <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex" aria-label="Navigare principală">
-            <a href="#1c" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Hosting 1C</a>
-            <a href="#dezvoltare" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Dezvoltare</a>
-            <a href="#vps" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">VPS / VDS</a>
-            <a href="#zapier" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Automatizări</a>
-            <a href="#contact" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full">Contact</a>
+        <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex" aria-label="<?php echo htmlspecialchars(t('nav_aria_main'), ENT_QUOTES, 'UTF-8'); ?>">
+            <a href="#1c" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full"><?php echo htmlspecialchars(t('nav_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#dezvoltare" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full"><?php echo htmlspecialchars(t('nav_dezvoltare'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#vps" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full"><?php echo htmlspecialchars(t('nav_vps_vds'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#zapier" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full"><?php echo htmlspecialchars(t('nav_automatizari'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#contact" class="relative py-2 hover:text-ihcBlue after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-ihcBlue after:transition-all after:duration-200 hover:after:w-full"><?php echo htmlspecialchars(t('nav_contact'), ENT_QUOTES, 'UTF-8'); ?></a>
         </nav>
 
-        <div class="hidden items-center gap-3 md:flex">
-            <button onclick="scrollToSection('1c')" class="btn-anim rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-700 shadow-sm hover:border-ihcBlue hover:text-ihcBlue hover:shadow">
-                Hosting 1C
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="lang-switcher" role="navigation" aria-label="Language">
+                <?php foreach (['ro' => 'RO', 'en' => 'EN', 'ru' => 'RU'] as $code => $label) : ?>
+                <a href="<?php echo htmlspecialchars(lang_url($code), ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo $lang === $code ? 'is-active' : ''; ?>"><?php echo $label; ?></a>
+                <?php endforeach; ?>
+            </div>
+            <div class="hidden items-center gap-3 md:flex">
+                <button onclick="scrollToSection('1c')" class="btn-anim rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-700 shadow-sm hover:border-ihcBlue hover:text-ihcBlue hover:shadow">
+                    <?php echo htmlspecialchars(t('nav_cta_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?>
+                </button>
+                <a href="#contact" class="btn-anim inline-flex items-center rounded-full bg-gradient-to-r from-ihcOrange to-ihcBlue px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl hover:shadow-ihcBlue/40">
+                    <?php echo htmlspecialchars(t('nav_cta_cere_oferta'), ENT_QUOTES, 'UTF-8'); ?>
+                </a>
+            </div>
+            <button id="mobile-menu-btn" type="button" class="mobile-menu-btn md:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="<?php echo htmlspecialchars(t('nav_menu_open'), ENT_QUOTES, 'UTF-8'); ?>">
+                <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M4 7h16M4 12h16M4 17h16"></path>
+                </svg>
+                <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18"></path>
+                </svg>
             </button>
-            <a href="#contact" class="btn-anim inline-flex items-center rounded-full bg-gradient-to-r from-ihcOrange to-ihcBlue px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl hover:shadow-ihcBlue/40">
-                Cere ofertă
-            </a>
         </div>
     </div>
+    <nav id="mobile-nav" class="mobile-nav md:hidden" aria-label="<?php echo htmlspecialchars(t('nav_aria_main'), ENT_QUOTES, 'UTF-8'); ?>" hidden>
+        <div class="mobile-nav-inner mx-auto max-w-6xl">
+            <a href="#1c" data-mobile-nav-link><?php echo htmlspecialchars(t('nav_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#dezvoltare" data-mobile-nav-link><?php echo htmlspecialchars(t('nav_dezvoltare'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#vps" data-mobile-nav-link><?php echo htmlspecialchars(t('nav_vps_vds'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#zapier" data-mobile-nav-link><?php echo htmlspecialchars(t('nav_automatizari'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#contact" data-mobile-nav-link><?php echo htmlspecialchars(t('nav_contact'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <div class="mobile-nav-cta">
+                <button type="button" data-mobile-nav-link data-scroll="1c" class="btn-anim rounded-full border border-slate-300 bg-white py-2.5 text-slate-700 shadow-sm">
+                    <?php echo htmlspecialchars(t('nav_cta_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?>
+                </button>
+                <a href="#contact" data-mobile-nav-link class="btn-anim rounded-full bg-gradient-to-r from-ihcOrange to-ihcBlue py-2.5 text-white shadow-lg shadow-ihcBlue/30">
+                    <?php echo htmlspecialchars(t('nav_cta_cere_oferta'), ENT_QUOTES, 'UTF-8'); ?>
+                </a>
+            </div>
+        </div>
+    </nav>
 </header>
 
 <main id="top" class="pb-20">
@@ -610,40 +778,40 @@ $json_ld = [
         </div>
         <div class="hero-inner mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1.1fr,0.95fr] lg:items-center lg:px-8 lg:py-20">
             <div class="hero-content-inner flex flex-col justify-center" data-reveal>
-                <p class="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-ihcBlue">Hosting 1C în cloud</p>
+                <p class="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-ihcBlue"><?php echo htmlspecialchars(t('hero_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
                 <h1 id="hero-title" class="mb-5 text-4xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-5xl lg:text-[2.75rem]">
-                    1C în cloud, <span class="gradient-text">accesibil de oriunde</span> și oricând.
+                    <?php echo t('hero_title'); ?>
                 </h1>
                 <p class="mb-6 max-w-lg text-base text-slate-600 leading-relaxed">
-                    Migrăm 1C în cloud, cu backup automat și acces securizat pentru echipa ta — contabilitatea și procesele interne fără întreruperi.
+                    <?php echo htmlspecialchars(t('hero_subtitle'), ENT_QUOTES, 'UTF-8'); ?>
                 </p>
 
                 <div class="mb-6 flex flex-wrap gap-2">
                     <?php $h = $site_data['hero'] ?? []; ?>
                     <span class="uptime-badge inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 text-xs font-medium text-emerald-800">
-                        <span class="uptime-dot h-2 w-2 rounded-full bg-emerald-500"></span> <?php echo htmlspecialchars($h['badge_1'] ?? 'Uptime 99,9%+', ENT_QUOTES, 'UTF-8'); ?>
+                        <span class="uptime-dot h-2 w-2 rounded-full bg-emerald-500"></span> <?php echo htmlspecialchars($h['badge_1'] ?? t('hero_badge_uptime'), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                     <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700">
-                        <span class="h-2 w-2 rounded-full bg-ihcBlue"></span> <?php echo htmlspecialchars($h['badge_2'] ?? 'Migrare inclusă', ENT_QUOTES, 'UTF-8'); ?>
+                        <span class="h-2 w-2 rounded-full bg-ihcBlue"></span> <?php echo htmlspecialchars($h['badge_2'] ?? t('hero_badge_migrare'), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                     <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700">
-                        <span class="h-2 w-2 rounded-full bg-ihcOrange"></span> <?php echo htmlspecialchars($h['badge_3'] ?? 'Acces RDP/VPN', ENT_QUOTES, 'UTF-8'); ?>
+                        <span class="h-2 w-2 rounded-full bg-ihcOrange"></span> <?php echo htmlspecialchars($h['badge_3'] ?? t('hero_badge_rdp_vpn'), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
 
                 <div class="flex flex-wrap gap-3">
                     <button onclick="scrollToSection('1c')" class="btn-anim rounded-full bg-ihcBlue px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/35 hover:bg-ihcBlueDark">
-                        Detalii hosting 1C
+                        <?php echo htmlspecialchars(t('hero_btn_detalii'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                     <button onclick="scrollToSection('contact')" class="btn-anim rounded-full border-2 border-slate-300 bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-700 hover:border-ihcBlue hover:text-ihcBlue">
-                        Cere ofertă
+                        <?php echo htmlspecialchars(t('hero_btn_oferta'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                 </div>
 
                 <dl class="mt-8 grid grid-cols-3 gap-4 text-xs">
-                    <div><dt class="text-slate-400">Experiență</dt><dd class="font-semibold text-slate-800">Migrare 1C</dd></div>
-                    <div><dt class="text-slate-400">Suport</dt><dd class="font-semibold text-slate-800">24/7</dd></div>
-                    <div><dt class="text-slate-400">Securitate</dt><dd class="font-semibold text-slate-800">Backup & DDoS</dd></div>
+                    <div><dt class="text-slate-400"><?php echo htmlspecialchars(t('hero_stat_experienta_label'), ENT_QUOTES, 'UTF-8'); ?></dt><dd class="font-semibold text-slate-800"><?php echo htmlspecialchars(t('hero_stat_experienta_value'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt class="text-slate-400"><?php echo htmlspecialchars(t('hero_stat_suport_label'), ENT_QUOTES, 'UTF-8'); ?></dt><dd class="font-semibold text-slate-800"><?php echo htmlspecialchars(t('hero_stat_suport_value'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt class="text-slate-400"><?php echo htmlspecialchars(t('hero_stat_securitate_label'), ENT_QUOTES, 'UTF-8'); ?></dt><dd class="font-semibold text-slate-800"><?php echo htmlspecialchars(t('hero_stat_securitate_value'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                 </dl>
             </div>
 
@@ -651,35 +819,35 @@ $json_ld = [
                 <div class="glass shadow-strong rounded-3xl border border-white/60 p-5 sm:p-6">
                 <div class="mb-4 flex items-start justify-between gap-3">
                     <div>
-                        <h2 class="text-base font-bold text-slate-900">Configurează pachet 1C</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Utilizatori, spațiu, baze.</p>
+                        <h2 class="text-base font-bold text-slate-900"><?php echo htmlspecialchars(t('hero_config_title'), ENT_QUOTES, 'UTF-8'); ?></h2>
+                        <p class="text-xs text-slate-500 mt-0.5"><?php echo htmlspecialchars(t('hero_config_subtitle'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
-                    <span class="rounded-full bg-ihcOrange/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-ihcOrange"><?php echo htmlspecialchars($site_data['1c']['trial_badge'] ?? 'Test 7 zile', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span class="rounded-full bg-ihcOrange/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-ihcOrange"><?php echo htmlspecialchars($site_data['1c']['trial_badge'] ?? t('hero_config_trial_badge'), ENT_QUOTES, 'UTF-8'); ?></span>
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span>Utilizatori 1C</span><span id="fg-users-val" class="font-semibold text-slate-900">3</span></div>
+                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span><?php echo htmlspecialchars(t('hero_config_users'), ENT_QUOTES, 'UTF-8'); ?></span><span id="fg-users-val" class="font-semibold text-slate-900">3</span></div>
                         <input id="fg-users" type="range" min="1" max="30" value="1" class="w-full h-2 rounded-full accent-ihcBlue">
                     </div>
                     <div>
-                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span>Spațiu DB (GB)</span><span id="fg-space-val" class="font-semibold text-slate-900">20 GB</span></div>
+                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span><?php echo htmlspecialchars(t('hero_config_space'), ENT_QUOTES, 'UTF-8'); ?></span><span id="fg-space-val" class="font-semibold text-slate-900">20 GB</span></div>
                         <input id="fg-space" type="range" min="10" max="1000" step="10" value="10" class="w-full h-2 rounded-full accent-ihcBlue">
                     </div>
                     <div>
-                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span>Baze 1C</span><span id="fg-inst-val" class="font-semibold text-slate-900">1</span></div>
+                        <div class="flex justify-between text-xs text-slate-600 mb-1"><span><?php echo htmlspecialchars(t('hero_config_baze'), ENT_QUOTES, 'UTF-8'); ?></span><span id="fg-inst-val" class="font-semibold text-slate-900">1</span></div>
                         <input id="fg-inst" type="range" min="1" max="20" step="1" value="1" class="w-full h-2 rounded-full accent-ihcBlue">
                     </div>
                 </div>
                 <div class="mt-5 flex items-end justify-between">
                     <div>
-                        <p class="text-[10px] uppercase tracking-widest text-ihcBlue font-semibold">Estimare lunară</p>
-                        <p id="fg-price" class="text-2xl font-bold text-slate-900">190 lei <span class="text-sm font-normal text-slate-500">/ lună</span></p>
+                        <p class="text-[10px] uppercase tracking-widest text-ihcBlue font-semibold"><?php echo htmlspecialchars(t('hero_config_estimate'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p id="fg-price" class="text-2xl font-bold text-slate-900">190 <?php echo htmlspecialchars(t('hero_config_price_currency'), ENT_QUOTES, 'UTF-8'); ?> <span class="text-sm font-normal text-slate-500"><?php echo htmlspecialchars(t('hero_config_price_suffix'), ENT_QUOTES, 'UTF-8'); ?></span></p>
                     </div>
                 </div>
                 <button onclick="scrollToSection('contact')" class="btn-anim mt-4 w-full rounded-xl bg-gradient-to-r from-ihcOrange to-ihcBlue py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl">
-                    Cere ofertă detaliată
+                    <?php echo htmlspecialchars(t('hero_config_btn'), ENT_QUOTES, 'UTF-8'); ?>
                 </button>
-                <p class="mt-3 text-[11px] text-slate-500"><?php echo htmlspecialchars($site_data['1c']['migrare_note'] ?? 'Migrare, VPN/RDP și consultanță incluse.', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="mt-3 text-[11px] text-slate-500"><?php echo htmlspecialchars($site_data['1c']['migrare_note'] ?? t('hero_config_migrare_note'), ENT_QUOTES, 'UTF-8'); ?></p>
                 </div>
             </aside>
         </div>
@@ -688,57 +856,57 @@ $json_ld = [
     <!-- 1C -->
     <section id="1c" class="border-b border-slate-200/60 bg-white">
         <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <p class="section-kicker text-s font-bold uppercase text-ihcBlue">Servicii 1C</p>
+            <p class="section-kicker text-s font-bold uppercase text-ihcBlue"><?php echo htmlspecialchars(t('section_1c_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="mt-6 section-photo section-photo-banner max-w-4xl" data-reveal>
-                <img src="assets/business-man.jpg" alt="Contabilitate și business pe hosting 1C securizat" loading="lazy" decoding="async">
+                <img src="assets/business-man.jpg" alt="<?php echo htmlspecialchars(t('section_1c_image_alt'), ENT_QUOTES, 'UTF-8'); ?>" loading="lazy" decoding="async">
             </div>
             <div class="mt-10 grid gap-10 lg:grid-cols-[1.05fr,1fr] lg:gap-14">
                 <div data-reveal>
-                    <h2 class="text-3xl font-bold text-slate-900 leading-tight">Datele 1C într-un server securizat, în câteva ore</h2>
+                    <h2 class="text-3xl font-bold text-slate-900 leading-tight"><?php echo htmlspecialchars(t('section_1c_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
                     <p class="mt-4 text-slate-600 leading-relaxed">
-                        Nu mai depinzi de un singur PC sau server din birou. Migrăm bazele 1C într-un datacenter sigur, cu backup și acces criptat.
+                        <?php echo htmlspecialchars(t('section_1c_intro'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                     <div class="mt-6 grid gap-3 sm:grid-cols-2">
                         <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Migrare 1C inclusă</p>
-                            <p class="text-xs text-slate-600 mt-1">Baze existente mutate în cloud cu timp minim de oprire.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_1c_card_migrare_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_1c_card_migrare_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Acces securizat</p>
-                            <p class="text-xs text-slate-600 mt-1">VPN/RDP, parole complexe, politici pe utilizator.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_1c_card_acces_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_1c_card_acces_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Backup automat</p>
-                            <p class="text-xs text-slate-600 mt-1">Copii zilnice, restaurare rapidă.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_1c_card_backup_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_1c_card_backup_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Scalare</p>
-                            <p class="text-xs text-slate-600 mt-1">Mai mulți useri/spațiu fără investiții hardware.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_1c_card_scalare_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_1c_card_scalare_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                     </div>
                     <div class="mt-6">
-                        <p class="text-xs font-bold text-slate-800 mb-2">Servicii incluse:</p>
+                        <p class="text-xs font-bold text-slate-800 mb-2"><?php echo htmlspecialchars(t('section_1c_included_label'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <ul class="list-disc space-y-1 pl-5 text-xs text-slate-600">
-                            <li>Configurare domeniu + integrare Cloudflare</li>
-                            <li>Instalare și configurare platformă 1C pe server</li>
-                            <li>Instalare și configurare baze SQL</li>
-                            <li>Conectare pe stații + suport la implementare</li>
-                            <li>Management utilizatori și accese</li>
-                            <li>Suport tehnic și consultanță</li>
-                            <li>Transfer date din baze vechi (clienți, mărfuri)</li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_1'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_2'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_3'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_4'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_5'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_6'), ENT_QUOTES, 'UTF-8'); ?></li>
+                            <li><?php echo htmlspecialchars(t('section_1c_included_7'), ENT_QUOTES, 'UTF-8'); ?></li>
                         </ul>
                     </div>
                 </div>
                 <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong scenario-1c-card" data-reveal>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1">Scenarii hosting 1C</h3>
-                    <p class="text-[11px] text-slate-500 mb-3">Apasă pe un scenariu pentru detalii suplimentare</p>
+                    <h3 class="text-sm font-bold text-slate-900 mb-1"><?php echo htmlspecialchars(t('section_1c_scenarios_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <p class="text-[11px] text-slate-500 mb-3"><?php echo htmlspecialchars(t('section_1c_scenarios_hint'), ENT_QUOTES, 'UTF-8'); ?></p>
                     <ul class="scenario-1c-list mt-4 space-y-4">
                         <li>
                         <button type="button" class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 transition-colors hover:border-slate-200" data-scenario="firma-mica" aria-haspopup="dialog">
                             <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcBlue"></span>
                             <div>
-                                <p class="font-semibold text-slate-900">Contabilitate firmă mică</p>
-                                <p class="text-xs text-slate-600">3–5 useri, o bază, acces birou/acasă, backup și suport.</p>
+                                <p class="font-semibold text-slate-900"><?php echo htmlspecialchars(t('section_1c_scenario_firma_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                                <p class="text-xs text-slate-600"><?php echo htmlspecialchars(t('section_1c_scenario_firma_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
                         </button>
                         </li>
@@ -746,8 +914,8 @@ $json_ld = [
                         <button type="button" class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 transition-colors hover:border-slate-200" data-scenario="grup" aria-haspopup="dialog">
                             <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-ihcOrange"></span>
                             <div>
-                                <p class="font-semibold text-slate-900">Grup de companii</p>
-                                <p class="text-xs text-slate-600">Mai multe baze, departamente în orașe diferite.</p>
+                                <p class="font-semibold text-slate-900"><?php echo htmlspecialchars(t('section_1c_scenario_grup_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                                <p class="text-xs text-slate-600"><?php echo htmlspecialchars(t('section_1c_scenario_grup_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
                         </button>
                         </li>
@@ -755,14 +923,14 @@ $json_ld = [
                         <button type="button" class="scenario-1c-item flex gap-3 rounded-xl border border-transparent p-3 transition-colors hover:border-slate-200" data-scenario="crm" aria-haspopup="dialog">
                             <span class="scenario-dot mt-1.5 h-2 w-2 shrink-0 rounded-full bg-emerald-500"></span>
                             <div>
-                                <p class="font-semibold text-slate-900">Integrare CRM / facturare</p>
-                                <p class="text-xs text-slate-600">1C cu CRM, facturare online, servicii bancare.</p>
+                                <p class="font-semibold text-slate-900"><?php echo htmlspecialchars(t('section_1c_scenario_crm_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                                <p class="text-xs text-slate-600"><?php echo htmlspecialchars(t('section_1c_scenario_crm_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
                         </button>
                         </li>
                     </ul>
                     <button onclick="scrollToSection('contact')" class="btn-cta-primary btn-anim mt-6 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-ihcBlue/25 hover:-translate-y-0.5">
-                        Discută cu un consultant 1C
+                        <?php echo htmlspecialchars(t('section_1c_btn_consultant'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                 </div>
             </div>
@@ -775,52 +943,52 @@ $json_ld = [
             <img src="assets/code-testing-.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="dev-section-inner mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <p class="section-kicker text-xs font-bold uppercase text-ihcBlue">Dezvoltare web</p>
+            <p class="section-kicker text-xs font-bold uppercase text-ihcBlue"><?php echo htmlspecialchars(t('section_dev_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="mt-2 grid gap-10 lg:grid-cols-[1.15fr,0.85fr] lg:gap-14 lg:items-start">
                 <div data-reveal>
-                    <h2 class="text-3xl font-bold text-slate-900 leading-tight">Dezvoltare site-uri</h2>
+                    <h2 class="text-3xl font-bold text-slate-900 leading-tight"><?php echo htmlspecialchars(t('section_dev_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
                     <p class="mt-4 text-slate-600 leading-relaxed">
-                        Construim site-uri moderne, rapide și ușor de administrat — de la landing page-uri de conversie până la aplicații web, magazine online, site-uri de vizită și alte tipuri de proiecte digitale, adaptate nevoilor afacerii tale.
+                        <?php echo htmlspecialchars(t('section_dev_intro'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                     <div class="mt-6 grid gap-3 sm:grid-cols-2">
                         <div class="glass-soft rounded-2xl border border-slate-200/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Landing page</p>
-                            <p class="text-xs text-slate-600 mt-1">Pagini de prezentare optimizate pentru lead-uri, campanii și conversii.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_dev_card_landing_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_dev_card_landing_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="glass-soft rounded-2xl border border-slate-200/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Site-uri aplicații</p>
-                            <p class="text-xs text-slate-600 mt-1">Platforme web, panouri interne și soluții custom cu funcționalități complexe.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_dev_card_apps_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_dev_card_apps_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="glass-soft rounded-2xl border border-slate-200/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Magazine online</p>
-                            <p class="text-xs text-slate-600 mt-1">E-commerce complet: catalog, plăți, livrări și integrări cu servicii externe.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_dev_card_shop_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_dev_card_shop_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="glass-soft rounded-2xl border border-slate-200/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Site-uri de vizită & altele</p>
-                            <p class="text-xs text-slate-600 mt-1">Prezentare firmă, portofolii, bloguri și alte tipuri de site-uri la comandă.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_dev_card_visit_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_dev_card_visit_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                     </div>
                     <ul class="mt-6 list-disc space-y-1 pl-5 text-sm text-slate-600">
-                        <li>Design responsive, optimizat pentru mobil și desktop</li>
-                        <li>Integrare hosting, domeniu, SSL și formulare de contact</li>
-                        <li>Suport la lansare, mentenanță și actualizări ulterioare</li>
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_1'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_2'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_3'), ENT_QUOTES, 'UTF-8'); ?></li>
                     </ul>
                     <button onclick="scrollToSection('contact')" class="btn-anim mt-8 rounded-full bg-ihcBlue px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/35 hover:bg-ihcBlueDark">
-                        Cere ofertă de dezvoltare
+                        <?php echo htmlspecialchars(t('section_dev_btn'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                 </div>
                 <div data-reveal>
                     <div class="glass-soft rounded-3xl border border-slate-200/80 p-5 shadow-strong">
-                        <p class="text-xs font-bold uppercase tracking-widest text-ihcBlue">Portofoliu</p>
-                        <h3 class="mt-2 text-lg font-bold text-slate-900">Proiecte livrate</h3>
-                        <p class="mt-2 text-sm text-slate-600">Exemple de site-uri dezvoltate de echipa noastră — design modern, structură clară și experiență plăcută pentru vizitatori.</p>
+                        <p class="text-xs font-bold uppercase tracking-widest text-ihcBlue"><?php echo htmlspecialchars(t('section_dev_portfolio_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <h3 class="mt-2 text-lg font-bold text-slate-900"><?php echo htmlspecialchars(t('section_dev_portfolio_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="mt-2 text-sm text-slate-600"><?php echo htmlspecialchars(t('section_dev_portfolio_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <a href="https://alinabradu.com" target="_blank" rel="noopener noreferrer" class="card-anim mt-5 flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-ihcBlue/50">
                             <img src="assets/portfolio/alinabradu-logo.png" alt="Logo Alina Bradu" class="portfolio-logo shrink-0">
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-bold text-slate-900">alinabradu.com</p>
-                                <p class="text-xs text-slate-500 mt-0.5">Site de vizită / portofoliu personal</p>
+                                <p class="text-xs text-slate-500 mt-0.5"><?php echo htmlspecialchars(t('section_dev_portfolio_item_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                             </div>
-                            <span class="shrink-0 rounded-full bg-ihcBlue/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-ihcBlue">Vezi site</span>
+                            <span class="shrink-0 rounded-full bg-ihcBlue/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-ihcBlue"><?php echo htmlspecialchars(t('section_dev_portfolio_btn'), ENT_QUOTES, 'UTF-8'); ?></span>
                         </a>
                     </div>
                 </div>
@@ -831,29 +999,29 @@ $json_ld = [
     <!-- VPS -->
     <section id="vps" class="border-b border-slate-200/60 bg-white">
         <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <p class="section-kicker text-s font-bold uppercase text-ihcBlue">Servere virtuale</p>
-            <h2 class="mt-2 text-3xl font-bold text-slate-900">VPS / VDS pe SSD NVMe în Europa</h2>
+            <p class="section-kicker text-s font-bold uppercase text-ihcBlue"><?php echo htmlspecialchars(t('section_vps_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
+            <h2 class="mt-2 text-3xl font-bold text-slate-900"><?php echo htmlspecialchars(t('section_vps_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
             <div class="mt-8 grid gap-8 lg:grid-cols-2">
                 <div class="grid gap-3 sm:grid-cols-2" data-reveal>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 hover:border-ihcBlue/30 hover:shadow transition">
-                        <h3 class="text-sm font-bold text-slate-900">KVM & virtualizare</h3>
-                        <p class="text-xs text-slate-600 mt-1">Linux sau Windows, acces complet.</p>
+                        <h3 class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_vps_card_kvm_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_vps_card_kvm_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 hover:border-ihcBlue/30 hover:shadow transition">
-                        <h3 class="text-sm font-bold text-slate-900">Resurse garantate</h3>
-                        <p class="text-xs text-slate-600 mt-1">RAM/CPU dedicate, scalare rapidă.</p>
+                        <h3 class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_vps_card_resurse_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_vps_card_resurse_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 hover:border-ihcBlue/30 hover:shadow transition">
-                        <h3 class="text-sm font-bold text-slate-900">Datacentere UE</h3>
-                        <p class="text-xs text-slate-600 mt-1">Latență mică, conexiuni redundante.</p>
+                        <h3 class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_vps_card_dc_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_vps_card_dc_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 hover:border-ihcBlue/30 hover:shadow transition">
-                        <h3 class="text-sm font-bold text-slate-900">Management opțional</h3>
-                        <p class="text-xs text-slate-600 mt-1">Update, securitate, monitorizare 24/7.</p>
+                        <h3 class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_vps_card_mgmt_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_vps_card_mgmt_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                 </div>
                 <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong vps-config-card" data-reveal>
-                    <h3 class="text-sm font-bold text-slate-900 mb-3">Configurații VPS</h3>
+                    <h3 class="text-sm font-bold text-slate-900 mb-3"><?php echo htmlspecialchars(t('section_vps_config_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
                     <ul class="vps-config-list space-y-3">
                         <?php
                         $vps_colors = ['bg-ihcBlue', 'bg-ihcOrange', 'bg-emerald-500'];
@@ -862,13 +1030,13 @@ $json_ld = [
                         ?>
                         <li class="vps-config-item flex gap-3 rounded-xl border border-slate-200 bg-white p-3 cursor-default">
                             <span class="vps-dot mt-1.5 h-2 w-2 shrink-0 rounded-full <?php echo $dot; ?>"></span>
-                            <div><p class="font-semibold text-slate-900"><?php echo htmlspecialchars($v['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p><p class="text-xs text-slate-600"><?php echo htmlspecialchars($v['specs'] ?? '', ENT_QUOTES, 'UTF-8'); ?> – de la <?php echo (int)($v['price'] ?? 0); ?> lei/lună</p></div>
+                            <div><p class="font-semibold text-slate-900"><?php echo htmlspecialchars($v['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p><p class="text-xs text-slate-600"><?php echo htmlspecialchars(($v['specs'] ?? '') . ' ' . sprintf(t('section_vps_price_from'), (int)($v['price'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?></p></div>
                         </li>
                         <?php endforeach; ?>
                     </ul>
-                    <p class="mt-3 text-[11px] text-slate-600">IP dedicat, firewall, ispmanager, cPanel, Plesk.</p>
+                    <p class="mt-3 text-[11px] text-slate-600"><?php echo htmlspecialchars(t('section_vps_config_note'), ENT_QUOTES, 'UTF-8'); ?></p>
                     <button onclick="scrollToSection('contact')" class="vps-cta-btn btn-anim mt-4 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-ihcBlue/25 hover:-translate-y-0.5">
-                        Cere ofertă personalizată
+                        <?php echo htmlspecialchars(t('section_vps_btn'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                 </div>
             </div>
@@ -878,40 +1046,40 @@ $json_ld = [
     <!-- AUTOMATIZARE ZAPIER -->
     <section id="zapier" class="border-b border-slate-200/60 bg-slate-50/70">
         <div class="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <p class="section-kicker text-s font-bold uppercase text-ihcBlue">Automatizări</p>
+            <p class="section-kicker text-s font-bold uppercase text-ihcBlue"><?php echo htmlspecialchars(t('section_zapier_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="mt-2 grid gap-10 lg:grid-cols-[1.05fr,1fr] lg:gap-14">
                 <div data-reveal>
-                    <h2 class="text-3xl font-bold text-slate-900 leading-tight">Automatizare Zapier — fluxuri de email și procese recurente</h2>
+                    <h2 class="text-3xl font-bold text-slate-900 leading-tight"><?php echo htmlspecialchars(t('section_zapier_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
                     <p class="mt-4 text-slate-600 leading-relaxed">
-                        Pentru companii care trebuie să transmită periodic un flux de emailuri — de exemplu acte de verificare, solicitări către parteneri sau clienți, raporturi — acest flux poate fi automatizat. Configurăm Zapier astfel încât trimiterile să se declanșeze la intervalul stabilit, fără intervenție manuală.
+                        <?php echo htmlspecialchars(t('section_zapier_intro'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                     <div class="mt-6 grid gap-3 sm:grid-cols-2">
                         <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Fluxuri periodice</p>
-                            <p class="text-xs text-slate-600 mt-1">Acte de verificare, solicitări, mementouri trimise automat la data sau la intervalul stabilit.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_zapier_card_periodice_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_zapier_card_periodice_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 bg-white/80 p-4 transition hover:border-ihcBlue/40 hover:shadow-md">
-                            <p class="text-sm font-bold text-slate-900">Integrări</p>
-                            <p class="text-xs text-slate-600 mt-1">Conectăm Gmail, Outlook, CRM, foi de calcul și alte aplicații în fluxuri clare și ușor de modificat.</p>
+                            <p class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_zapier_card_integrari_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="text-xs text-slate-600 mt-1"><?php echo htmlspecialchars(t('section_zapier_card_integrari_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                     </div>
                     <ul class="mt-6 list-disc space-y-1 pl-5 text-sm text-slate-600">
-                        <li>Configurare Zapier pentru trimiteri automate de emailuri</li>
-                        <li>Fluxuri la perioadă fixă sau declanșate de evenimente</li>
-                        <li>Șabloane și personalizare pentru fiecare tip de solicitare</li>
+                        <li><?php echo htmlspecialchars(t('section_zapier_bullet_1'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_zapier_bullet_2'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_zapier_bullet_3'), ENT_QUOTES, 'UTF-8'); ?></li>
                     </ul>
                 </div>
                 <div class="space-y-4" data-reveal>
                     <div class="section-photo section-photo-banner">
-                        <img src="assets/ai-nuclear-energy.jpg" alt="Automatizare procese și fluxuri de lucru" loading="lazy" decoding="async">
+                        <img src="assets/ai-nuclear-energy.jpg" alt="<?php echo htmlspecialchars(t('section_zapier_image_alt'), ENT_QUOTES, 'UTF-8'); ?>" loading="lazy" decoding="async">
                     </div>
                     <div class="glass-soft rounded-3xl border border-slate-200 p-5 shadow-strong">
-                    <h3 class="text-sm font-bold text-slate-900">Exemplu de utilizare</h3>
+                    <h3 class="text-sm font-bold text-slate-900"><?php echo htmlspecialchars(t('section_zapier_example_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
                     <p class="mt-3 text-sm text-slate-600">
-                        O firmă trebuie să ceară lunar de la parteneri acte de verificare și documente. În loc să trimită manual zeci de emailuri, configurăm un Zap care, la o anumită dată sau la un semnal (ex. intrare în lună nouă), trimite automat solicitările către lista definită, cu șablon personalizat. Economisești timp și reduci erorile omise.
+                        <?php echo htmlspecialchars(t('section_zapier_example_body'), ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                     <button onclick="scrollToSection('contact')" class="btn-anim mt-6 w-full rounded-xl border-2 border-ihcBlue bg-white py-2.5 text-xs font-bold uppercase tracking-wider text-ihcBlue hover:bg-ihcBlue hover:text-white">
-                        Cere ofertă pentru automatizare
+                        <?php echo htmlspecialchars(t('section_zapier_btn'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
                     </div>
                 </div>
@@ -925,25 +1093,25 @@ $json_ld = [
             <img src="assets/contact-us-word.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="contact-section-inner mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <p class="section-kicker text-xs font-bold uppercase text-ihcBlue">Contact</p>
-            <h2 class="mt-2 text-3xl font-bold text-slate-900">Migrăm 1C și site-urile tale pe un hosting mai bun</h2>
+            <p class="section-kicker text-xs font-bold uppercase text-ihcBlue"><?php echo htmlspecialchars(t('section_contact_kicker'), ENT_QUOTES, 'UTF-8'); ?></p>
+            <h2 class="mt-2 text-3xl font-bold text-slate-900"><?php echo htmlspecialchars(t('section_contact_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
             <div class="mt-8 grid gap-8 lg:grid-cols-2">
                 <?php $contact = $site_data['contact'] ?? []; ?>
                 <div class="grid gap-3 sm:grid-cols-2 text-sm" data-reveal>
                     <div class="glass-soft rounded-2xl border border-slate-200/80 p-4">
-                        <p class="text-xs font-bold text-slate-900">Email vânzări</p>
+                        <p class="text-xs font-bold text-slate-900"><?php echo htmlspecialchars(t('section_contact_email_sales'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <p class="text-slate-600"><?php echo htmlspecialchars($contact['email_sales'] ?? 'sales@smartsolutions.md', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="glass-soft rounded-2xl border border-slate-200/80 p-4">
-                        <p class="text-xs font-bold text-slate-900">Suport</p>
+                        <p class="text-xs font-bold text-slate-900"><?php echo htmlspecialchars(t('section_contact_email_support'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <p class="text-slate-600"><?php echo htmlspecialchars($contact['email_support'] ?? 'contact@smartsolutions.md', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="glass-soft rounded-2xl border border-slate-200/80 p-4">
-                        <p class="text-xs font-bold text-slate-900">Telefon</p>
+                        <p class="text-xs font-bold text-slate-900"><?php echo htmlspecialchars(t('section_contact_phone'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <p class="text-slate-600"><?php echo htmlspecialchars($contact['phone'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                     <div class="glass-soft rounded-2xl border border-slate-200/80 p-4">
-                        <p class="text-xs font-bold text-slate-900">Program</p>
+                        <p class="text-xs font-bold text-slate-900"><?php echo htmlspecialchars(t('section_contact_schedule'), ENT_QUOTES, 'UTF-8'); ?></p>
                         <p class="text-slate-600"><?php echo htmlspecialchars($contact['schedule'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
                 </div>
@@ -955,21 +1123,21 @@ $json_ld = [
                         <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><?php echo htmlspecialchars($contact_error, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php endif; ?>
                     <div>
-                        <label class="mb-1 block text-xs font-semibold text-slate-800">Nume complet</label>
-                        <input type="text" name="nume" placeholder="Numele tău" value="<?php echo isset($nume) ? htmlspecialchars($nume, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
+                        <label class="mb-1 block text-xs font-semibold text-slate-800"><?php echo htmlspecialchars(t('form_label_name'), ENT_QUOTES, 'UTF-8'); ?></label>
+                        <input type="text" name="nume" placeholder="<?php echo htmlspecialchars(t('form_placeholder_name'), ENT_QUOTES, 'UTF-8'); ?>" value="<?php echo isset($nume) ? htmlspecialchars($nume, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-semibold text-slate-800">Email</label>
-                        <input type="email" name="email" placeholder="email" value="<?php echo isset($email) ? htmlspecialchars($email, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
+                        <label class="mb-1 block text-xs font-semibold text-slate-800"><?php echo htmlspecialchars(t('form_label_email'), ENT_QUOTES, 'UTF-8'); ?></label>
+                        <input type="email" name="email" placeholder="<?php echo htmlspecialchars(t('form_placeholder_email'), ENT_QUOTES, 'UTF-8'); ?>" value="<?php echo isset($email) ? htmlspecialchars($email, ENT_QUOTES, 'UTF-8') : ''; ?>" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20">
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-semibold text-slate-800">Mesaj</label>
-                        <textarea name="mesaj" placeholder="Lasă-ne un mesaj aici..." rows="4" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20"><?php echo isset($mesaj) ? htmlspecialchars($mesaj, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
+                        <label class="mb-1 block text-xs font-semibold text-slate-800"><?php echo htmlspecialchars(t('form_label_message'), ENT_QUOTES, 'UTF-8'); ?></label>
+                        <textarea name="mesaj" placeholder="<?php echo htmlspecialchars(t('form_placeholder_message'), ENT_QUOTES, 'UTF-8'); ?>" rows="4" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-ihcBlue focus:ring-2 focus:ring-ihcBlue/20"><?php echo isset($mesaj) ? htmlspecialchars($mesaj, ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                     </div>
                     <button type="submit" class="btn-anim w-full rounded-xl bg-gradient-to-r from-ihcOrange to-ihcBlue py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl">
-                        Trimite cererea
+                        <?php echo htmlspecialchars(t('form_submit'), ENT_QUOTES, 'UTF-8'); ?>
                     </button>
-                    <p class="text-[11px] text-slate-500">Prin trimitere ești de acord cu prelucrarea datelor conform politicii de confidențialitate.</p>
+                    <p class="text-[11px] text-slate-500"><?php echo htmlspecialchars(t('form_privacy'), ENT_QUOTES, 'UTF-8'); ?></p>
                 </form>
             </div>
         </div>
@@ -984,20 +1152,20 @@ $json_ld = [
                 <div class="mb-2">
                     <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($company['name'] ?? 'Smart Solutions', ENT_QUOTES, 'UTF-8'); ?>" class="site-logo-footer">
                 </div>
-                <p class="text-xs text-slate-600 max-w-sm"><?php echo htmlspecialchars($company['footer_text'] ?? 'Găzduire web, VPS/VDS, hosting 1C și domenii pentru companii și proiecte din România și Europa.', ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="text-xs text-slate-600 max-w-sm"><?php echo htmlspecialchars($company['footer_text'] ?? t('footer_default_text'), ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-800 mb-2">Servicii</p>
-                <div class="space-y-1 text-xs"><a href="#1c" class="block text-slate-600 hover:text-ihcBlue">Hosting 1C</a><a href="#dezvoltare" class="block text-slate-600 hover:text-ihcBlue">Dezvoltare site-uri</a><a href="#vps" class="block text-slate-600 hover:text-ihcBlue">VPS / VDS</a><a href="#zapier" class="block text-slate-600 hover:text-ihcBlue">Automatizări Zapier</a></div>
+                <p class="text-xs font-bold text-slate-800 mb-2"><?php echo htmlspecialchars(t('footer_services'), ENT_QUOTES, 'UTF-8'); ?></p>
+                <div class="space-y-1 text-xs"><a href="#1c" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_services_1c'), ENT_QUOTES, 'UTF-8'); ?></a><a href="#dezvoltare" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_services_dev'), ENT_QUOTES, 'UTF-8'); ?></a><a href="#vps" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_services_vps'), ENT_QUOTES, 'UTF-8'); ?></a><a href="#zapier" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_services_zapier'), ENT_QUOTES, 'UTF-8'); ?></a></div>
             </div>
             <div>
-                <p class="text-xs font-bold text-slate-800 mb-2">Companie</p>
-                <div class="space-y-1 text-xs"><a href="#" class="block text-slate-600 hover:text-ihcBlue">Despre noi</a><a href="#" class="block text-slate-600 hover:text-ihcBlue">Confidențialitate</a><a href="#" class="block text-slate-600 hover:text-ihcBlue">Termeni</a></div>
+                <p class="text-xs font-bold text-slate-800 mb-2"><?php echo htmlspecialchars(t('footer_company'), ENT_QUOTES, 'UTF-8'); ?></p>
+                <div class="space-y-1 text-xs"><a href="#" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_about'), ENT_QUOTES, 'UTF-8'); ?></a><a href="#" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_privacy'), ENT_QUOTES, 'UTF-8'); ?></a><a href="#" class="block text-slate-600 hover:text-ihcBlue"><?php echo htmlspecialchars(t('footer_terms'), ENT_QUOTES, 'UTF-8'); ?></a></div>
             </div>
         </div>
         <div class="mt-6 pt-6 border-t border-slate-200 flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:justify-between">
             <span>© <?php echo date('Y'); ?> <?php echo htmlspecialchars($company['copyright'] ?? 'OND SOLUTIONS SRL', ENT_QUOTES, 'UTF-8'); ?>.</span>
-            <span>Plată: card, transfer bancar, facturare.</span>
+            <span><?php echo htmlspecialchars(t('footer_payment'), ENT_QUOTES, 'UTF-8'); ?></span>
         </div>
     </div>
 </footer>
@@ -1005,18 +1173,18 @@ $json_ld = [
 <div id="scenario-modal" class="scenario-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="scenario-modal-title">
     <div class="scenario-modal-backdrop" data-scenario-close></div>
     <div class="scenario-modal-panel">
-        <button type="button" class="scenario-modal-close" data-scenario-close aria-label="Închide">&times;</button>
+        <button type="button" class="scenario-modal-close" data-scenario-close aria-label="<?php echo htmlspecialchars(t('modal_close'), ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
         <span id="scenario-modal-dot" class="scenario-modal-dot bg-ihcBlue"></span>
         <h3 id="scenario-modal-title" class="text-xl font-bold text-slate-900 pr-8"></h3>
         <p id="scenario-modal-lead" class="mt-3 text-sm text-slate-600 leading-relaxed"></p>
         <ul id="scenario-modal-list" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
         <button type="button" id="scenario-modal-cta" class="btn-anim mt-6 w-full rounded-xl bg-gradient-to-r from-ihcOrange to-ihcBlue py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-ihcBlue/30 hover:shadow-xl">
-            Cere ofertă pentru acest scenariu
+            <?php echo htmlspecialchars(t('modal_scenario_cta'), ENT_QUOTES, 'UTF-8'); ?>
         </button>
     </div>
 </div>
 
-<button id="back-to-top" type="button" class="back-to-top btn-anim" aria-label="Înapoi sus">
+<button id="back-to-top" type="button" class="back-to-top btn-anim" aria-label="<?php echo htmlspecialchars(t('back_to_top'), ENT_QUOTES, 'UTF-8'); ?>">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 19V5"></path>
         <path d="M5 12l7-7 7 7"></path>
@@ -1025,6 +1193,7 @@ $json_ld = [
 
 <script>
     var siteData1C = <?php echo json_encode($site_data['1c'] ?? ['base_price'=>330,'per_user'=>30,'per_gb_factor'=>0.08,'per_instance'=>30,'min_price'=>150]); ?>;
+    var i18nPrice = <?php echo json_encode(['currency' => t('js_price_currency'), 'perMonth' => t('js_price_per_month'), 'gb' => t('js_price_gb')], JSON_UNESCAPED_UNICODE); ?>;
     function scrollToSection(id) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -1037,12 +1206,12 @@ $json_ld = [
         var space = parseInt(document.getElementById('fg-space').value, 10);
         var inst = parseInt(document.getElementById('fg-inst').value, 10);
         document.getElementById('fg-users-val').textContent = users;
-        document.getElementById('fg-space-val').textContent = space + ' GB';
+        document.getElementById('fg-space-val').textContent = space + ' ' + i18nPrice.gb;
         document.getElementById('fg-inst-val').textContent = inst;
         var c = siteData1C;
         var base = (c.base_price || 330) + (users - 1) * (c.per_user || 30) + (space - 10) / 100 * (c.per_gb_factor || 0.08) * 100 + (inst - 1) * (c.per_instance || 30);
         var price = Math.max(c.min_price || 150, Math.round(base));
-        document.getElementById('fg-price').innerHTML = price + ' lei <span class="text-sm font-normal text-slate-500">/ lună</span>';
+        document.getElementById('fg-price').innerHTML = price + ' ' + i18nPrice.currency + ' <span class="text-sm font-normal text-slate-500">' + i18nPrice.perMonth + '</span>';
     }
     ['fg-users', 'fg-space', 'fg-inst'].forEach(function(id) {
         var el = document.getElementById(id);
@@ -1053,6 +1222,44 @@ $json_ld = [
     (function() {
         var header = document.getElementById('site-header');
         var backToTop = document.getElementById('back-to-top');
+        var mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        var mobileNav = document.getElementById('mobile-nav');
+        var menuOpenLabel = <?php echo json_encode(t('nav_menu_open'), JSON_UNESCAPED_UNICODE); ?>;
+        var menuCloseLabel = <?php echo json_encode(t('nav_menu_close'), JSON_UNESCAPED_UNICODE); ?>;
+
+        function setMobileMenu(open) {
+            if (!mobileMenuBtn || !mobileNav) return;
+            mobileMenuBtn.classList.toggle('is-open', open);
+            mobileNav.classList.toggle('is-open', open);
+            mobileMenuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            mobileMenuBtn.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
+            mobileNav.hidden = !open;
+            document.body.style.overflow = open ? 'hidden' : '';
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                setMobileMenu(!mobileNav.classList.contains('is-open'));
+            });
+        }
+
+        document.querySelectorAll('[data-mobile-nav-link]').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                var scrollId = link.getAttribute('data-scroll');
+                if (scrollId) {
+                    e.preventDefault();
+                    scrollToSection(scrollId);
+                }
+                setMobileMenu(false);
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('is-open')) {
+                setMobileMenu(false);
+            }
+        });
+
         function onScroll() {
             var y = window.scrollY;
             if (header) header.classList.toggle('is-scrolled', y > 24);
@@ -1092,44 +1299,7 @@ $json_ld = [
     })();
 
     (function() {
-        var scenarioDetails = {
-            'firma-mica': {
-                title: 'Contabilitate firmă mică',
-                dotClass: 'bg-ihcBlue',
-                lead: 'Soluție ideală pentru SRL-uri și PFA-uri care au nevoie de 1C accesibil, fără investiții în server local.',
-                bullets: [
-                    '3–5 utilizatori simultan, o bază de date principală',
-                    'Acces securizat de acasă sau birou (RDP/VPN)',
-                    'Backup zilnic automat și restaurare rapidă',
-                    'Migrare inclusă din baza existentă',
-                    'Suport la configurare stații de lucru'
-                ]
-            },
-            'grup': {
-                title: 'Grup de companii',
-                dotClass: 'bg-ihcOrange',
-                lead: 'Pentru holdinguri și grupuri cu mai multe entități juridice, departamente dispersate geografic.',
-                bullets: [
-                    'Mai multe baze 1C pe același server securizat',
-                    'Accese diferențiate pe roluri și companii',
-                    'Consolidare rapoarte între entități',
-                    'Scalare resurse (RAM, CPU, spațiu) fără oprire lungă',
-                    'Administrare centralizată utilizatori și politici'
-                ]
-            },
-            'crm': {
-                title: 'Integrare CRM / facturare',
-                dotClass: 'bg-emerald-500',
-                lead: '1C conectat la ecosistemul digital: CRM, facturare online, servicii bancare și automatizări.',
-                bullets: [
-                    'Integrare cu CRM și platforme de facturare electronică',
-                    'Sincronizare date clienți, comenzi și plăți',
-                    'Conectare servicii bancare și import extrase',
-                    'Fluxuri automate între departamente',
-                    'Consultanță la alegerea și configurarea integrărilor'
-                ]
-            }
-        };
+        var scenarioDetails = <?php echo json_encode($scenario_details, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         var modal = document.getElementById('scenario-modal');
         var titleEl = document.getElementById('scenario-modal-title');
