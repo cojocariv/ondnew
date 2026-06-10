@@ -108,13 +108,43 @@ $services = [
     ['icon' => 'gauge', 'title' => 'service_perf_title', 'desc' => 'service_perf_desc'],
 ];
 
-$why_blocks = [
-    ['title' => 'why_security_title', 'desc' => 'why_security_desc', 'image' => 'assets/business-man.jpg'],
-    ['title' => 'why_reliability_title', 'desc' => 'why_reliability_desc', 'image' => 'assets/coding-man.jpg'],
-    ['title' => 'why_scalability_title', 'desc' => 'why_scalability_desc', 'image' => 'assets/ai-nuclear-energy.jpg'],
-    ['title' => 'why_cost_title', 'desc' => 'why_cost_desc', 'image' => 'assets/pen-adult-.jpg'],
-    ['title' => 'why_automation_title', 'desc' => 'why_automation_desc', 'image' => 'assets/code-testing-.jpg'],
-    ['title' => 'why_support_title', 'desc' => 'why_support_desc', 'image' => 'assets/contact-us-word.jpg'],
+$hosting_1c_features = [
+    ['title' => 'hosting_1c_card_migrare_title', 'desc' => 'hosting_1c_card_migrare_desc'],
+    ['title' => 'hosting_1c_card_acces_title', 'desc' => 'hosting_1c_card_acces_desc'],
+    ['title' => 'hosting_1c_card_backup_title', 'desc' => 'hosting_1c_card_backup_desc'],
+    ['title' => 'hosting_1c_card_scalare_title', 'desc' => 'hosting_1c_card_scalare_desc'],
+];
+$hosting_1c_scenarios = [
+    ['id' => 'firma-mica', 'dot' => 'primary', 'title' => 'hosting_1c_scenario_firma_title', 'desc' => 'hosting_1c_scenario_firma_desc'],
+    ['id' => 'grup', 'dot' => 'accent', 'title' => 'hosting_1c_scenario_grup_title', 'desc' => 'hosting_1c_scenario_grup_desc'],
+    ['id' => 'crm', 'dot' => 'green', 'title' => 'hosting_1c_scenario_crm_title', 'desc' => 'hosting_1c_scenario_crm_desc'],
+];
+$scenario_details = [
+    'firma-mica' => [
+        'title' => t('scenario_firma_mica_title'),
+        'dotClass' => 'hosting-1c-scenario-dot--primary',
+        'lead' => t('scenario_firma_mica_lead'),
+        'bullets' => [t('scenario_firma_mica_b1'), t('scenario_firma_mica_b2'), t('scenario_firma_mica_b3'), t('scenario_firma_mica_b4'), t('scenario_firma_mica_b5')],
+    ],
+    'grup' => [
+        'title' => t('scenario_grup_title'),
+        'dotClass' => 'hosting-1c-scenario-dot--accent',
+        'lead' => t('scenario_grup_lead'),
+        'bullets' => [t('scenario_grup_b1'), t('scenario_grup_b2'), t('scenario_grup_b3'), t('scenario_grup_b4'), t('scenario_grup_b5')],
+    ],
+    'crm' => [
+        'title' => t('scenario_crm_title'),
+        'dotClass' => 'hosting-1c-scenario-dot--green',
+        'lead' => t('scenario_crm_lead'),
+        'bullets' => [t('scenario_crm_b1'), t('scenario_crm_b2'), t('scenario_crm_b3'), t('scenario_crm_b4'), t('scenario_crm_b5')],
+    ],
+];
+
+$dev_cards = [
+    ['title' => 'section_dev_card_landing_title', 'desc' => 'section_dev_card_landing_desc'],
+    ['title' => 'section_dev_card_apps_title', 'desc' => 'section_dev_card_apps_desc'],
+    ['title' => 'section_dev_card_shop_title', 'desc' => 'section_dev_card_shop_desc'],
+    ['title' => 'section_dev_card_visit_title', 'desc' => 'section_dev_card_visit_desc'],
 ];
 
 $process_steps = [
@@ -168,7 +198,8 @@ function service_icon(string $name): string {
     <link rel="alternate" hreflang="en" href="<?php echo htmlspecialchars($hreflang_urls['en'], ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="alternate" hreflang="ru" href="<?php echo htmlspecialchars($hreflang_urls['ru'], ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="alternate" hreflang="x-default" href="<?php echo htmlspecialchars($hreflang_urls['ro'], ENT_QUOTES, 'UTF-8'); ?>">
-    <link rel="icon" href="assets/LOGO/transparent%20logo.png" type="image/png">
+    <link rel="icon" href="assets/LOGO/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/LOGO/favicon.png">
     <meta name="theme-color" content="#185649">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="<?php echo htmlspecialchars(lang_og_locale(), ENT_QUOTES, 'UTF-8'); ?>">
@@ -196,8 +227,9 @@ function service_icon(string $name): string {
         </a>
         <nav class="nav-desktop" aria-label="<?php echo htmlspecialchars(t('nav_aria_main'), ENT_QUOTES, 'UTF-8'); ?>">
             <a href="#services"><?php echo htmlspecialchars(t('nav_services'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#hosting-1c"><?php echo htmlspecialchars(t('nav_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
             <a href="#cloud"><?php echo htmlspecialchars(t('nav_cloud'), ENT_QUOTES, 'UTF-8'); ?></a>
-            <a href="#why"><?php echo htmlspecialchars(t('nav_why'), ENT_QUOTES, 'UTF-8'); ?></a>
+            <a href="#dezvoltare"><?php echo htmlspecialchars(t('nav_dezvoltare'), ENT_QUOTES, 'UTF-8'); ?></a>
             <a href="#process"><?php echo htmlspecialchars(t('nav_process'), ENT_QUOTES, 'UTF-8'); ?></a>
             <a href="#cases"><?php echo htmlspecialchars(t('nav_cases'), ENT_QUOTES, 'UTF-8'); ?></a>
             <a href="#contact"><?php echo htmlspecialchars(t('nav_contact'), ENT_QUOTES, 'UTF-8'); ?></a>
@@ -220,8 +252,9 @@ function service_icon(string $name): string {
     </div>
     <nav id="mobile-nav" class="mobile-nav" aria-label="<?php echo htmlspecialchars(t('nav_aria_main'), ENT_QUOTES, 'UTF-8'); ?>" hidden>
         <a href="#services" data-mobile-nav><?php echo htmlspecialchars(t('nav_services'), ENT_QUOTES, 'UTF-8'); ?></a>
+        <a href="#hosting-1c" data-mobile-nav><?php echo htmlspecialchars(t('nav_hosting_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
         <a href="#cloud" data-mobile-nav><?php echo htmlspecialchars(t('nav_cloud'), ENT_QUOTES, 'UTF-8'); ?></a>
-        <a href="#why" data-mobile-nav><?php echo htmlspecialchars(t('nav_why'), ENT_QUOTES, 'UTF-8'); ?></a>
+        <a href="#dezvoltare" data-mobile-nav><?php echo htmlspecialchars(t('nav_dezvoltare'), ENT_QUOTES, 'UTF-8'); ?></a>
         <a href="#process" data-mobile-nav><?php echo htmlspecialchars(t('nav_process'), ENT_QUOTES, 'UTF-8'); ?></a>
         <a href="#cases" data-mobile-nav><?php echo htmlspecialchars(t('nav_cases'), ENT_QUOTES, 'UTF-8'); ?></a>
         <a href="#contact" data-mobile-nav><?php echo htmlspecialchars(t('nav_contact'), ENT_QUOTES, 'UTF-8'); ?></a>
@@ -331,57 +364,202 @@ function service_icon(string $name): string {
         </div>
     </section>
 
+    <!-- HOSTING 1C -->
+    <section id="hosting-1c" class="section section--muted hosting-1c" aria-labelledby="hosting-1c-title">
+        <div class="hosting-1c-bg" aria-hidden="true">
+            <img src="assets/woman-typing-laptop.png" alt="" loading="lazy" width="1920" height="1080">
+        </div>
+        <div class="container">
+            <div class="hosting-1c-hero-row">
+            <div class="reveal">
+                <?php $h1c = $site_data['hero'] ?? []; ?>
+                <span class="kicker"><?php echo htmlspecialchars(t('hosting_1c_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
+                <h2 id="hosting-1c-title" class="display-lg" style="margin-bottom:1rem;"><?php echo t('hosting_1c_title'); ?></h2>
+                <p class="section-intro" style="margin-top:0;"><?php echo htmlspecialchars(t('hosting_1c_subtitle'), ENT_QUOTES, 'UTF-8'); ?></p>
+                <div class="hosting-1c-badges">
+                    <span class="hosting-1c-badge hosting-1c-badge--uptime">
+                        <span class="hosting-1c-badge-dot hosting-1c-badge-dot--green"></span>
+                        <?php echo htmlspecialchars($h1c['badge_1'] ?? t('hosting_1c_badge_uptime'), ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span class="hosting-1c-badge hosting-1c-badge--migrare">
+                        <span class="hosting-1c-badge-dot hosting-1c-badge-dot--primary"></span>
+                        <?php echo htmlspecialchars($h1c['badge_2'] ?? t('hosting_1c_badge_migrare'), ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span class="hosting-1c-badge hosting-1c-badge--rdp">
+                        <span class="hosting-1c-badge-dot hosting-1c-badge-dot--accent"></span>
+                        <?php echo htmlspecialchars($h1c['badge_3'] ?? t('hosting_1c_badge_rdp'), ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                </div>
+                <div class="hosting-1c-actions">
+                    <a href="#hosting-1c-details" class="btn btn-primary"><?php echo htmlspecialchars(t('hosting_1c_btn_details'), ENT_QUOTES, 'UTF-8'); ?></a>
+                    <a href="#contact" class="btn btn-outline"><?php echo htmlspecialchars(t('hosting_1c_btn_quote'), ENT_QUOTES, 'UTF-8'); ?></a>
+                </div>
+                <dl class="hosting-1c-stats">
+                    <div class="hosting-1c-stat">
+                        <dt><?php echo htmlspecialchars(t('hosting_1c_stat_experienta_label'), ENT_QUOTES, 'UTF-8'); ?></dt>
+                        <dd><?php echo htmlspecialchars(t('hosting_1c_stat_experienta_value'), ENT_QUOTES, 'UTF-8'); ?></dd>
+                    </div>
+                    <div class="hosting-1c-stat">
+                        <dt><?php echo htmlspecialchars(t('hosting_1c_stat_suport_label'), ENT_QUOTES, 'UTF-8'); ?></dt>
+                        <dd><?php echo htmlspecialchars(t('hosting_1c_stat_suport_value'), ENT_QUOTES, 'UTF-8'); ?></dd>
+                    </div>
+                    <div class="hosting-1c-stat">
+                        <dt><?php echo htmlspecialchars(t('hosting_1c_stat_securitate_label'), ENT_QUOTES, 'UTF-8'); ?></dt>
+                        <dd><?php echo htmlspecialchars(t('hosting_1c_stat_securitate_value'), ENT_QUOTES, 'UTF-8'); ?></dd>
+                    </div>
+                </dl>
+            </div>
+            <aside class="hosting-1c-config reveal reveal-delay-2">
+                <div class="hosting-1c-config-head">
+                    <div>
+                        <h3><?php echo htmlspecialchars(t('hosting_1c_config_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p><?php echo htmlspecialchars(t('hosting_1c_config_subtitle'), ENT_QUOTES, 'UTF-8'); ?></p>
+                    </div>
+                    <span class="hosting-1c-trial"><?php echo htmlspecialchars($site_data['1c']['trial_badge'] ?? t('hosting_1c_config_trial'), ENT_QUOTES, 'UTF-8'); ?></span>
+                </div>
+                <div class="hosting-1c-slider">
+                    <div class="hosting-1c-slider-label">
+                        <span><?php echo htmlspecialchars(t('hosting_1c_config_users'), ENT_QUOTES, 'UTF-8'); ?></span>
+                        <strong id="fg-users-val">1</strong>
+                    </div>
+                    <input id="fg-users" type="range" min="1" max="30" value="1" aria-label="<?php echo htmlspecialchars(t('hosting_1c_config_users'), ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="hosting-1c-slider">
+                    <div class="hosting-1c-slider-label">
+                        <span><?php echo htmlspecialchars(t('hosting_1c_config_space'), ENT_QUOTES, 'UTF-8'); ?></span>
+                        <strong id="fg-space-val">10 GB</strong>
+                    </div>
+                    <input id="fg-space" type="range" min="10" max="1000" step="10" value="10" aria-label="<?php echo htmlspecialchars(t('hosting_1c_config_space'), ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="hosting-1c-slider">
+                    <div class="hosting-1c-slider-label">
+                        <span><?php echo htmlspecialchars(t('hosting_1c_config_baze'), ENT_QUOTES, 'UTF-8'); ?></span>
+                        <strong id="fg-inst-val">1</strong>
+                    </div>
+                    <input id="fg-inst" type="range" min="1" max="20" step="1" value="1" aria-label="<?php echo htmlspecialchars(t('hosting_1c_config_baze'), ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="hosting-1c-price">
+                    <p class="hosting-1c-price-label"><?php echo htmlspecialchars(t('hosting_1c_config_estimate'), ENT_QUOTES, 'UTF-8'); ?></p>
+                    <p id="fg-price" class="hosting-1c-price-value">330 <?php echo htmlspecialchars(t('js_price_currency'), ENT_QUOTES, 'UTF-8'); ?> <span><?php echo htmlspecialchars(t('js_price_per_month'), ENT_QUOTES, 'UTF-8'); ?></span></p>
+                </div>
+                <a href="#contact" class="hosting-1c-config-btn" style="display:block;text-align:center;text-decoration:none;"><?php echo htmlspecialchars(t('hosting_1c_config_btn'), ENT_QUOTES, 'UTF-8'); ?></a>
+                <p class="hosting-1c-config-note"><?php echo htmlspecialchars($site_data['1c']['migrare_note'] ?? t('hosting_1c_config_note'), ENT_QUOTES, 'UTF-8'); ?></p>
+            </aside>
+            </div>
+
+            <div id="hosting-1c-details" class="hosting-1c-details reveal">
+                <div class="hosting-1c-banner">
+                    <img src="assets/business-man.jpg" alt="<?php echo htmlspecialchars(t('hosting_1c_detail_image_alt'), ENT_QUOTES, 'UTF-8'); ?>" loading="lazy" width="1200" height="400">
+                </div>
+                <div class="hosting-1c-details-grid">
+                    <div class="hosting-1c-details-main">
+                        <h3 class="heading-md"><?php echo htmlspecialchars(t('hosting_1c_detail_heading'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-muted" style="margin:1rem 0 1.5rem;font-size:1rem;line-height:1.7;"><?php echo htmlspecialchars(t('hosting_1c_detail_intro'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <div class="hosting-1c-features-grid">
+                            <?php foreach ($hosting_1c_features as $i => $feat) : ?>
+                            <article class="hosting-1c-feature-card reveal reveal-delay-<?php echo ($i % 4) + 1; ?>">
+                                <h4><?php echo htmlspecialchars(t($feat['title']), ENT_QUOTES, 'UTF-8'); ?></h4>
+                                <p><?php echo htmlspecialchars(t($feat['desc']), ENT_QUOTES, 'UTF-8'); ?></p>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="hosting-1c-included">
+                            <strong><?php echo htmlspecialchars(t('hosting_1c_included_label'), ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <ul>
+                                <?php for ($ii = 1; $ii <= 7; $ii++) : ?>
+                                <li><?php echo htmlspecialchars(t('hosting_1c_included_' . $ii), ENT_QUOTES, 'UTF-8'); ?></li>
+                                <?php endfor; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <aside class="hosting-1c-scenarios-card reveal reveal-delay-2">
+                        <h3><?php echo htmlspecialchars(t('hosting_1c_scenarios_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="hosting-1c-scenarios-hint"><?php echo htmlspecialchars(t('hosting_1c_scenarios_hint'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <ul class="hosting-1c-scenario-list">
+                            <?php foreach ($hosting_1c_scenarios as $si => $sc) : ?>
+                            <li>
+                                <button type="button" class="hosting-1c-scenario-item" data-scenario="<?php echo htmlspecialchars($sc['id'], ENT_QUOTES, 'UTF-8'); ?>" aria-haspopup="dialog">
+                                    <span class="hosting-1c-scenario-dot hosting-1c-scenario-dot--<?php echo htmlspecialchars($sc['dot'], ENT_QUOTES, 'UTF-8'); ?>"></span>
+                                    <span class="hosting-1c-scenario-text">
+                                        <strong><?php echo htmlspecialchars(t($sc['title']), ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <span><?php echo htmlspecialchars(t($sc['desc']), ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </span>
+                                </button>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <a href="#contact" class="hosting-1c-consultant-btn"><?php echo htmlspecialchars(t('hosting_1c_btn_consultant'), ENT_QUOTES, 'UTF-8'); ?></a>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CLOUD -->
     <section id="cloud" class="cloud-section section--dark">
         <div class="cloud-parallax" aria-hidden="true">
-            <div class="cloud-layer" data-parallax="0.2">
+            <div class="cloud-layer">
                 <img src="assets/coding-man.jpg" alt="" loading="lazy" width="1920" height="1080">
             </div>
             <div class="cloud-layer cloud-layer--overlay"></div>
         </div>
         <div class="container cloud-content">
-            <div class="reveal">
-                <span class="kicker kicker--light"><?php echo htmlspecialchars(t('cloud_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
-                <h2 class="display-lg"><?php echo htmlspecialchars(t('cloud_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
-                <p class="section-intro" style="margin-top:1.5rem;"><?php echo htmlspecialchars(t('cloud_intro'), ENT_QUOTES, 'UTF-8'); ?></p>
+            <div class="cloud-intro-col reveal">
+                <span class="kicker kicker--accent"><?php echo htmlspecialchars(t('cloud_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
+                <h2 class="display-lg cloud-heading"><?php echo htmlspecialchars(t('cloud_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
+                <p class="cloud-intro"><?php echo htmlspecialchars(t('cloud_intro'), ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div class="cloud-features">
                 <?php for ($i = 1; $i <= 4; $i++) : ?>
-                <div class="cloud-feature reveal reveal-delay-<?php echo $i; ?>">
-                    <span class="cloud-feature-num">0<?php echo $i; ?></span>
-                    <div>
-                        <strong><?php echo htmlspecialchars(t('cloud_f' . $i . '_title'), ENT_QUOTES, 'UTF-8'); ?></strong>
-                        <p style="margin:0.35rem 0 0;font-size:0.875rem;opacity:0.85;"><?php echo htmlspecialchars(t('cloud_f' . $i . '_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
+                <article class="cloud-feature reveal reveal-delay-<?php echo $i; ?>">
+                    <span class="cloud-feature-num" aria-hidden="true">0<?php echo $i; ?></span>
+                    <div class="cloud-feature-body">
+                        <h3><?php echo htmlspecialchars(t('cloud_f' . $i . '_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p><?php echo htmlspecialchars(t('cloud_f' . $i . '_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
                     </div>
-                </div>
+                </article>
                 <?php endfor; ?>
             </div>
         </div>
     </section>
 
-    <!-- WHY -->
-    <section id="why" class="section section--muted">
-        <div class="container">
-            <div class="section-header section-header--center reveal">
-                <span class="kicker"><?php echo htmlspecialchars(t('why_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
-                <h2 class="display-lg"><?php echo htmlspecialchars(t('why_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
-            </div>
-            <div class="why-blocks">
-                <?php foreach ($why_blocks as $i => $block) : ?>
-                <div class="why-block reveal">
-                    <div class="why-block-image">
-                        <img src="<?php echo htmlspecialchars($block['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="" loading="lazy" width="800" height="600">
+    <!-- DEZVOLTARE WEB -->
+    <section id="dezvoltare" class="section dev-section" aria-labelledby="dev-title">
+        <div class="dev-section-bg" aria-hidden="true">
+            <img src="assets/code-testing-.jpg" alt="" loading="lazy" width="1920" height="1080">
+        </div>
+        <div class="container dev-section-inner">
+            <div class="dev-grid">
+                <div class="reveal">
+                    <span class="kicker"><?php echo htmlspecialchars(t('section_dev_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
+                    <h2 id="dev-title" class="display-lg" style="margin-bottom:1rem;"><?php echo htmlspecialchars(t('section_dev_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
+                    <p class="section-intro" style="margin-top:0;"><?php echo htmlspecialchars(t('section_dev_intro'), ENT_QUOTES, 'UTF-8'); ?></p>
+                    <div class="dev-cards-grid">
+                        <?php foreach ($dev_cards as $i => $card) : ?>
+                        <article class="dev-type-card reveal reveal-delay-<?php echo ($i % 4) + 1; ?>">
+                            <h3><?php echo htmlspecialchars(t($card['title']), ENT_QUOTES, 'UTF-8'); ?></h3>
+                            <p><?php echo htmlspecialchars(t($card['desc']), ENT_QUOTES, 'UTF-8'); ?></p>
+                        </article>
+                        <?php endforeach; ?>
                     </div>
-                    <div class="why-block-content">
-                        <span class="why-pill">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-                            <?php echo htmlspecialchars(t($block['title']), ENT_QUOTES, 'UTF-8'); ?>
-                        </span>
-                        <h3 class="heading-md"><?php echo htmlspecialchars(t($block['title']), ENT_QUOTES, 'UTF-8'); ?></h3>
-                        <p class="text-muted" style="margin-top:1rem;font-size:1.0625rem;"><?php echo htmlspecialchars(t($block['desc']), ENT_QUOTES, 'UTF-8'); ?></p>
-                    </div>
+                    <ul class="dev-bullets">
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_1'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_2'), ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li><?php echo htmlspecialchars(t('section_dev_bullet_3'), ENT_QUOTES, 'UTF-8'); ?></li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" style="margin-top:1.5rem;"><?php echo htmlspecialchars(t('section_dev_btn'), ENT_QUOTES, 'UTF-8'); ?></a>
                 </div>
-                <?php endforeach; ?>
+                <aside class="dev-portfolio reveal reveal-delay-2">
+                    <div class="dev-portfolio-card">
+                        <span class="kicker"><?php echo htmlspecialchars(t('section_dev_portfolio_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
+                        <h3 class="heading-md" style="margin:0.5rem 0 0.75rem;"><?php echo htmlspecialchars(t('section_dev_portfolio_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <p class="text-muted" style="font-size:0.9375rem;margin:0;"><?php echo htmlspecialchars(t('section_dev_portfolio_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <a href="https://alinabradu.com" target="_blank" rel="noopener noreferrer" class="dev-portfolio-item">
+                            <img src="assets/portfolio/alinabradu.png" alt="Alina Bradu" class="dev-portfolio-wordmark" width="160" height="72" loading="lazy">
+                            <span class="dev-portfolio-btn"><?php echo htmlspecialchars(t('section_dev_portfolio_btn'), ENT_QUOTES, 'UTF-8'); ?></span>
+                        </a>
+                    </div>
+                </aside>
             </div>
         </div>
     </section>
@@ -393,9 +571,9 @@ function service_icon(string $name): string {
                 <span class="kicker"><?php echo htmlspecialchars(t('process_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
                 <h2 class="display-lg"><?php echo htmlspecialchars(t('process_heading'), ENT_QUOTES, 'UTF-8'); ?></h2>
             </div>
-            <div class="process-timeline">
+            <div class="process-timeline" aria-label="<?php echo htmlspecialchars(t('process_heading'), ENT_QUOTES, 'UTF-8'); ?>">
                 <?php foreach ($process_steps as $i => $step) : ?>
-                <div class="process-step reveal reveal-delay-<?php echo min($i + 1, 4); ?>">
+                <div class="process-step">
                     <span class="process-num"><?php echo $i + 1; ?></span>
                     <h4><?php echo htmlspecialchars(t($step['title']), ENT_QUOTES, 'UTF-8'); ?></h4>
                     <p><?php echo htmlspecialchars(t($step['desc']), ENT_QUOTES, 'UTF-8'); ?></p>
@@ -514,8 +692,8 @@ function service_icon(string $name): string {
             <div class="footer-links">
                 <strong style="display:block;margin-bottom:0.75rem;font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.08em;"><?php echo htmlspecialchars(t('footer_services'), ENT_QUOTES, 'UTF-8'); ?></strong>
                 <a href="#cloud"><?php echo htmlspecialchars(t('footer_services_cloud'), ENT_QUOTES, 'UTF-8'); ?></a>
-                <a href="#services"><?php echo htmlspecialchars(t('footer_services_dev'), ENT_QUOTES, 'UTF-8'); ?></a>
-                <a href="#services"><?php echo htmlspecialchars(t('footer_services_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
+                <a href="#dezvoltare"><?php echo htmlspecialchars(t('footer_services_dev'), ENT_QUOTES, 'UTF-8'); ?></a>
+                <a href="#hosting-1c"><?php echo htmlspecialchars(t('footer_services_1c'), ENT_QUOTES, 'UTF-8'); ?></a>
                 <a href="#services"><?php echo htmlspecialchars(t('footer_services_managed'), ENT_QUOTES, 'UTF-8'); ?></a>
             </div>
             <div class="footer-links">
@@ -532,10 +710,27 @@ function service_icon(string $name): string {
     </div>
 </footer>
 
+<div id="scenario-modal" class="scenario-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="scenario-modal-title">
+    <div class="scenario-modal-backdrop" data-scenario-close></div>
+    <div class="scenario-modal-panel">
+        <button type="button" class="scenario-modal-close" data-scenario-close aria-label="<?php echo htmlspecialchars(t('modal_close'), ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
+        <span id="scenario-modal-dot" class="hosting-1c-scenario-dot hosting-1c-scenario-dot--primary scenario-modal-dot"></span>
+        <h3 id="scenario-modal-title" class="heading-md" style="padding-right:2rem;"></h3>
+        <p id="scenario-modal-lead" class="text-muted" style="margin-top:0.75rem;font-size:0.9375rem;line-height:1.65;"></p>
+        <ul id="scenario-modal-list" class="scenario-modal-list"></ul>
+        <a href="#contact" id="scenario-modal-cta" class="btn btn-primary" style="width:100%;margin-top:1.25rem;text-align:center;" data-scenario-close><?php echo htmlspecialchars(t('modal_scenario_cta'), ENT_QUOTES, 'UTF-8'); ?></a>
+    </div>
+</div>
+
 <button id="back-to-top" type="button" class="back-to-top" aria-label="<?php echo htmlspecialchars(t('back_to_top'), ENT_QUOTES, 'UTF-8'); ?>">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
+<script>
+    window.siteData1C = <?php echo json_encode($site_data['1c'] ?? ['base_price'=>330,'per_user'=>30,'per_gb_factor'=>0.08,'per_instance'=>30,'min_price'=>150], JSON_UNESCAPED_UNICODE); ?>;
+    window.i18nPrice = <?php echo json_encode(['currency' => t('js_price_currency'), 'perMonth' => t('js_price_per_month'), 'gb' => t('js_price_gb')], JSON_UNESCAPED_UNICODE); ?>;
+    window.scenarioDetails = <?php echo json_encode($scenario_details, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+</script>
 <script src="assets/js/site.js" defer></script>
 </body>
 </html>

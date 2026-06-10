@@ -72,6 +72,69 @@
         reveals.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
+    /* Process timeline — left-to-right storytelling */
+    var processTimeline = document.querySelector('.process-timeline');
+    if (processTimeline) {
+        var processSteps = processTimeline.querySelectorAll('.process-step');
+        var processReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var processTourTimer = null;
+
+        function setProcessHighlight(index) {
+            processSteps.forEach(function (step, i) {
+                step.classList.toggle('is-active', i === index);
+                step.classList.toggle('is-passed', i < index);
+            });
+        }
+
+        function finishProcessTour() {
+            processSteps.forEach(function (step) {
+                step.classList.remove('is-active');
+                step.classList.add('is-passed');
+            });
+            processTimeline.classList.add('is-complete');
+        }
+
+        function runProcessTour() {
+            var idx = 0;
+            var stepMs = 1600;
+
+            function tick() {
+                if (idx >= processSteps.length) {
+                    finishProcessTour();
+                    return;
+                }
+                setProcessHighlight(idx);
+                idx += 1;
+                processTourTimer = setTimeout(tick, stepMs);
+            }
+
+            processTourTimer = setTimeout(tick, 900);
+        }
+
+        function startProcessAnimation() {
+            processTimeline.classList.add('is-animated');
+            if (processReducedMotion) {
+                processSteps.forEach(function (step) { step.classList.add('is-passed'); });
+                processTimeline.classList.add('is-complete');
+                return;
+            }
+            runProcessTour();
+        }
+
+        if (processReducedMotion) {
+            startProcessAnimation();
+        } else {
+            var processObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    processObserver.unobserve(processTimeline);
+                    startProcessAnimation();
+                });
+            }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+            processObserver.observe(processTimeline);
+        }
+    }
+
     /* Animated counters */
     var counters = document.querySelectorAll('[data-counter]');
     if (counters.length) {
@@ -128,6 +191,84 @@
     if (scrollHint) {
         scrollHint.addEventListener('click', function () {
             scrollToSection('trust');
+        });
+    }
+
+    /* 1C hosting price calculator */
+    var usersEl = document.getElementById('fg-users');
+    if (usersEl) {
+        var i18n = window.i18nPrice || { currency: 'lei', perMonth: '/ lună', gb: 'GB' };
+        var c = window.siteData1C || {};
+
+        function calcPrice1C() {
+            var users = parseInt(document.getElementById('fg-users').value, 10);
+            var space = parseInt(document.getElementById('fg-space').value, 10);
+            var inst = parseInt(document.getElementById('fg-inst').value, 10);
+            document.getElementById('fg-users-val').textContent = users;
+            document.getElementById('fg-space-val').textContent = space + ' ' + i18n.gb;
+            document.getElementById('fg-inst-val').textContent = inst;
+            var base = (c.base_price || 330) + (users - 1) * (c.per_user || 30)
+                + (space - 10) / 100 * (c.per_gb_factor || 0.08) * 100
+                + (inst - 1) * (c.per_instance || 30);
+            var price = Math.max(c.min_price || 150, Math.round(base));
+            document.getElementById('fg-price').innerHTML = price + ' ' + i18n.currency
+                + ' <span>' + i18n.perMonth + '</span>';
+        }
+
+        ['fg-users', 'fg-space', 'fg-inst'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.addEventListener('input', calcPrice1C);
+        });
+        calcPrice1C();
+    }
+
+    /* 1C scenario modal */
+    var scenarioModal = document.getElementById('scenario-modal');
+    var scenarioDetails = window.scenarioDetails || {};
+    if (scenarioModal) {
+        var titleEl = document.getElementById('scenario-modal-title');
+        var leadEl = document.getElementById('scenario-modal-lead');
+        var listEl = document.getElementById('scenario-modal-list');
+        var dotEl = document.getElementById('scenario-modal-dot');
+        var lastFocus = null;
+
+        function closeScenarioModal() {
+            scenarioModal.classList.remove('is-open');
+            scenarioModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            if (lastFocus) lastFocus.focus();
+        }
+
+        function openScenarioModal(key) {
+            var data = scenarioDetails[key];
+            if (!data) return;
+            lastFocus = document.activeElement;
+            dotEl.className = 'hosting-1c-scenario-dot scenario-modal-dot ' + data.dotClass;
+            titleEl.textContent = data.title;
+            leadEl.textContent = data.lead;
+            listEl.innerHTML = data.bullets.map(function (item) {
+                return '<li>' + item + '</li>';
+            }).join('');
+            scenarioModal.classList.add('is-open');
+            scenarioModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            scenarioModal.querySelector('.scenario-modal-close').focus();
+        }
+
+        document.querySelectorAll('[data-scenario]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                openScenarioModal(btn.getAttribute('data-scenario'));
+            });
+        });
+
+        document.querySelectorAll('[data-scenario-close]').forEach(function (el) {
+            el.addEventListener('click', closeScenarioModal);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && scenarioModal.classList.contains('is-open')) {
+                closeScenarioModal();
+            }
         });
     }
 })();
