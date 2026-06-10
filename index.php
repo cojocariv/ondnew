@@ -49,8 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $company_seo = $site_data['company'] ?? [];
 $contact_seo = $site_data['contact'] ?? [];
-$chat_phone_digits = preg_replace('/\D+/', '', $contact_seo['whatsapp'] ?? $contact_seo['phone'] ?? '');
-$chat_viber_digits = preg_replace('/\D+/', '', $contact_seo['viber'] ?? $contact_seo['phone'] ?? '');
+$chat_whatsapp_raw = trim($contact_seo['whatsapp'] ?? '');
+if ($chat_whatsapp_raw === '') {
+    $chat_whatsapp_raw = trim($contact_seo['phone'] ?? '');
+}
+$chat_viber_raw = trim($contact_seo['viber'] ?? '');
+if ($chat_viber_raw === '') {
+    $chat_viber_raw = trim($contact_seo['phone'] ?? '');
+}
+$chat_phone_digits = preg_replace('/\D+/', '', $chat_whatsapp_raw);
+$chat_viber_digits = preg_replace('/\D+/', '', $chat_viber_raw);
 $chat_whatsapp_url = $chat_phone_digits
     ? 'https://wa.me/' . $chat_phone_digits . '?text=' . rawurlencode(t('chat_whatsapp_message'))
     : '';
