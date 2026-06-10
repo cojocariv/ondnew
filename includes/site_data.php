@@ -23,7 +23,8 @@ $defaults = [
     'vps' => [],
     'domains' => [],
     'contact' => [
-        'email_sales' => '', 'email_support' => '', 'phone' => '', 'schedule' => ''
+        'email_sales' => '', 'email_support' => '', 'phone' => '',
+        'whatsapp' => '', 'viber' => '', 'schedule' => ''
     ],
     'hero' => [ 'badge_1' => '', 'badge_2' => '', 'badge_3' => '' ],
     'company' => [ 'name' => 'Smart Solutions', 'tagline' => 'Hosting 1C • VPS • Domenii', 'footer_text' => '', 'copyright' => 'OND SOLUTIONS SRL' ]

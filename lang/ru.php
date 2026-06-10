@@ -217,7 +217,14 @@ return [
     'section_contact_email_support' => 'Поддержка',
     'section_contact_phone' => 'Телефон',
     'section_contact_schedule' => 'График работы',
+    'section_contact_messengers' => 'Быстрый чат',
     'contact_map_placeholder' => 'Карта офиса — скоро',
+
+    'chat_widget_toggle' => 'Открыть чат',
+    'chat_widget_title' => 'Напишите нам в мессенджер',
+    'chat_whatsapp' => 'WhatsApp',
+    'chat_viber' => 'Viber',
+    'chat_whatsapp_message' => 'Здравствуйте! Хотел(а) бы получить консультацию по услугам Smart Solutions.',
 
     'form_label_name' => 'Полное имя',
     'form_placeholder_name' => 'Ваше имя',

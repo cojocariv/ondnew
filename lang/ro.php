@@ -217,7 +217,14 @@ return [
     'section_contact_email_support' => 'Suport',
     'section_contact_phone' => 'Telefon',
     'section_contact_schedule' => 'Program',
+    'section_contact_messengers' => 'Chat rapid',
     'contact_map_placeholder' => 'Harta biroului — integrare viitoare',
+
+    'chat_widget_toggle' => 'Deschide chat',
+    'chat_widget_title' => 'Scrie-ne pe messenger',
+    'chat_whatsapp' => 'WhatsApp',
+    'chat_viber' => 'Viber',
+    'chat_whatsapp_message' => 'Bună! Aș dori o consultație despre serviciile Smart Solutions.',
 
     'form_label_name' => 'Nume complet',
     'form_placeholder_name' => 'Numele tău',

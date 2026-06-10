@@ -217,7 +217,14 @@ return [
     'section_contact_email_support' => 'Support',
     'section_contact_phone' => 'Phone',
     'section_contact_schedule' => 'Hours',
+    'section_contact_messengers' => 'Quick chat',
     'contact_map_placeholder' => 'Office map — coming soon',
+
+    'chat_widget_toggle' => 'Open chat',
+    'chat_widget_title' => 'Message us on messenger',
+    'chat_whatsapp' => 'WhatsApp',
+    'chat_viber' => 'Viber',
+    'chat_whatsapp_message' => 'Hello! I would like a consultation about Smart Solutions services.',
 
     'form_label_name' => 'Full name',
     'form_placeholder_name' => 'Your name',

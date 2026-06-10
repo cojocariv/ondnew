@@ -49,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $company_seo = $site_data['company'] ?? [];
 $contact_seo = $site_data['contact'] ?? [];
+$chat_phone_digits = preg_replace('/\D+/', '', $contact_seo['whatsapp'] ?? $contact_seo['phone'] ?? '');
+$chat_viber_digits = preg_replace('/\D+/', '', $contact_seo['viber'] ?? $contact_seo['phone'] ?? '');
+$chat_whatsapp_url = $chat_phone_digits
+    ? 'https://wa.me/' . $chat_phone_digits . '?text=' . rawurlencode(t('chat_whatsapp_message'))
+    : '';
+$chat_viber_url = $chat_viber_digits
+    ? 'viber://chat?number=' . rawurlencode('+' . $chat_viber_digits)
+    : '';
+$chat_enabled = $chat_whatsapp_url !== '' || $chat_viber_url !== '';
 $company_name = $company_seo['name'] ?? 'Smart Solutions';
 $seo_title = t('seo_title', $company_name);
 $seo_description = t('seo_description', $company_name);
@@ -642,12 +651,33 @@ function service_icon(string $name): string {
                         </div>
                         <div class="contact-item">
                             <strong><?php echo htmlspecialchars(t('section_contact_phone'), ENT_QUOTES, 'UTF-8'); ?></strong>
-                            <?php echo htmlspecialchars($contact['phone'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            <?php if (!empty($contact['phone'])) : ?>
+                                <a href="tel:<?php echo htmlspecialchars(preg_replace('/[^\d+]/', '', $contact['phone']), ENT_QUOTES, 'UTF-8'); ?>" class="contact-item-link"><?php echo htmlspecialchars($contact['phone'], ENT_QUOTES, 'UTF-8'); ?></a>
+                            <?php endif; ?>
                         </div>
                         <div class="contact-item">
                             <strong><?php echo htmlspecialchars(t('section_contact_schedule'), ENT_QUOTES, 'UTF-8'); ?></strong>
                             <?php echo htmlspecialchars($contact['schedule'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                         </div>
+                        <?php if ($chat_enabled) : ?>
+                        <div class="contact-messengers">
+                            <strong class="contact-messengers__label"><?php echo htmlspecialchars(t('section_contact_messengers'), ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <div class="contact-messengers__actions">
+                                <?php if ($chat_whatsapp_url) : ?>
+                                <a href="<?php echo htmlspecialchars($chat_whatsapp_url, ENT_QUOTES, 'UTF-8'); ?>" class="contact-messenger contact-messenger--whatsapp" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    <?php echo htmlspecialchars(t('chat_whatsapp'), ENT_QUOTES, 'UTF-8'); ?>
+                                </a>
+                                <?php endif; ?>
+                                <?php if ($chat_viber_url) : ?>
+                                <a href="<?php echo htmlspecialchars($chat_viber_url, ENT_QUOTES, 'UTF-8'); ?>" class="contact-messenger contact-messenger--viber">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.398.002C9.473.028 5.331.344 3.014 2.467 1.294 4.177.693 6.698.623 8.82c-.06 1.88-.13 5.448 3.398 6.447l-.002 2.032s-.022.56.345.673c.398.123.63-.257 1.013-.667.21-.227.502-.555.722-.806 1.99 1.032 4.283 1.606 6.59 1.638.003 0 .01 0 .013 0 2.447 0 4.886-.643 7.01-1.86 3.56-1.944 3.585-5.228 3.57-6.312-.018-1.172-.04-4.92-3.28-7.158-2.29-1.57-5.033-1.912-6.68-1.926z"/></svg>
+                                    <?php echo htmlspecialchars(t('chat_viber'), ENT_QUOTES, 'UTF-8'); ?>
+                                </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                     <div class="contact-map" role="img" aria-label="<?php echo htmlspecialchars(t('contact_map_placeholder'), ENT_QUOTES, 'UTF-8'); ?>">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4;margin-right:0.75rem;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -721,6 +751,30 @@ function service_icon(string $name): string {
         <a href="#contact" id="scenario-modal-cta" class="btn btn-primary" style="width:100%;margin-top:1.25rem;text-align:center;" data-scenario-close><?php echo htmlspecialchars(t('modal_scenario_cta'), ENT_QUOTES, 'UTF-8'); ?></a>
     </div>
 </div>
+
+<?php if ($chat_enabled) : ?>
+<div class="chat-widget" id="chat-widget">
+    <div class="chat-widget__panel" id="chat-widget-panel" hidden>
+        <p class="chat-widget__title"><?php echo htmlspecialchars(t('chat_widget_title'), ENT_QUOTES, 'UTF-8'); ?></p>
+        <?php if ($chat_whatsapp_url) : ?>
+        <a href="<?php echo htmlspecialchars($chat_whatsapp_url, ENT_QUOTES, 'UTF-8'); ?>" class="chat-widget__link chat-widget__link--whatsapp" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span><?php echo htmlspecialchars(t('chat_whatsapp'), ENT_QUOTES, 'UTF-8'); ?></span>
+        </a>
+        <?php endif; ?>
+        <?php if ($chat_viber_url) : ?>
+        <a href="<?php echo htmlspecialchars($chat_viber_url, ENT_QUOTES, 'UTF-8'); ?>" class="chat-widget__link chat-widget__link--viber">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11.398.002C9.473.028 5.331.344 3.014 2.467 1.294 4.177.693 6.698.623 8.82c-.06 1.88-.13 5.448 3.398 6.447l-.002 2.032s-.022.56.345.673c.398.123.63-.257 1.013-.667.21-.227.502-.555.722-.806 1.99 1.032 4.283 1.606 6.59 1.638.003 0 .01 0 .013 0 2.447 0 4.886-.643 7.01-1.86 3.56-1.944 3.585-5.228 3.57-6.312-.018-1.172-.04-4.92-3.28-7.158-2.29-1.57-5.033-1.912-6.68-1.926z"/></svg>
+            <span><?php echo htmlspecialchars(t('chat_viber'), ENT_QUOTES, 'UTF-8'); ?></span>
+        </a>
+        <?php endif; ?>
+    </div>
+    <button type="button" class="chat-widget__toggle" id="chat-widget-toggle" aria-expanded="false" aria-controls="chat-widget-panel" aria-label="<?php echo htmlspecialchars(t('chat_widget_toggle'), ENT_QUOTES, 'UTF-8'); ?>">
+        <svg class="chat-widget__icon chat-widget__icon--open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <svg class="chat-widget__icon chat-widget__icon--close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+</div>
+<?php endif; ?>
 
 <button id="back-to-top" type="button" class="back-to-top" aria-label="<?php echo htmlspecialchars(t('back_to_top'), ENT_QUOTES, 'UTF-8'); ?>">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>

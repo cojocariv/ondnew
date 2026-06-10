@@ -178,6 +178,37 @@
         }, { passive: true });
     }
 
+    /* Chat widget */
+    var chatWidget = document.getElementById('chat-widget');
+    if (chatWidget) {
+        var chatToggle = document.getElementById('chat-widget-toggle');
+        var chatPanel = document.getElementById('chat-widget-panel');
+
+        function setChatOpen(open) {
+            if (!chatToggle || !chatPanel) return;
+            chatToggle.classList.toggle('is-open', open);
+            chatToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            chatPanel.hidden = !open;
+        }
+
+        if (chatToggle && chatPanel) {
+            chatToggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                setChatOpen(chatPanel.hidden);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!chatWidget.contains(e.target)) {
+                    setChatOpen(false);
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') setChatOpen(false);
+            });
+        }
+    }
+
     /* Back to top */
     var backToTop = document.getElementById('back-to-top');
     if (backToTop) {

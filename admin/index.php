@@ -71,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save']) && !empty($_S
             'email_sales' => trim($d['contact']['email_sales'] ?? ''),
             'email_support' => trim($d['contact']['email_support'] ?? ''),
             'phone' => trim($d['contact']['phone'] ?? ''),
+            'whatsapp' => trim($d['contact']['whatsapp'] ?? ''),
+            'viber' => trim($d['contact']['viber'] ?? ''),
             'schedule' => trim($d['contact']['schedule'] ?? ''),
         ],
         'hero' => [
@@ -339,6 +341,8 @@ $pw_error = $pw_error ?? '';
                     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Email vânzări</label><input type="text" name="data[contact][email_sales]" value="<?php echo htmlspecialchars($contact['email_sales'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
                     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Email suport</label><input type="text" name="data[contact][email_support]" value="<?php echo htmlspecialchars($contact['email_support'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
                     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Telefon</label><input type="text" name="data[contact][phone]" value="<?php echo htmlspecialchars($contact['phone'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp (opțional)</label><input type="text" name="data[contact][whatsapp]" value="<?php echo htmlspecialchars($contact['whatsapp'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Lasă gol = folosește telefonul" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
+                    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Viber (opțional)</label><input type="text" name="data[contact][viber]" value="<?php echo htmlspecialchars($contact['viber'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Lasă gol = folosește telefonul" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
                     <div><label class="block text-xs font-semibold text-slate-600 mb-1">Program</label><input type="text" name="data[contact][schedule]" value="<?php echo htmlspecialchars($contact['schedule'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></div>
                 </div>
             </section>

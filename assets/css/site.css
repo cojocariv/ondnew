@@ -1165,6 +1165,60 @@ section[id] { scroll-margin-top: var(--header-h); }
     color: var(--primary);
     margin-bottom: 0.25rem;
 }
+.contact-item-link {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.contact-item-link:hover { color: var(--primary); }
+.contact-messengers {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-muted);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+.contact-messengers__label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+.contact-messengers__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.contact-messenger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s ease;
+}
+.contact-messenger svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+.contact-messenger:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+.contact-messenger--whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+.contact-messenger--viber {
+    background: #7360f2;
+    color: #fff;
+}
 .contact-map {
     margin-top: 1.5rem;
     aspect-ratio: 16/7;
@@ -1257,6 +1311,100 @@ section[id] { scroll-margin-top: var(--header-h); }
     justify-content: space-between;
     font-size: 0.8125rem;
     opacity: 0.6;
+}
+
+/* Chat widget */
+.chat-widget {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 5.25rem;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+.chat-widget__panel {
+    width: min(16rem, calc(100vw - 3rem));
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    transform-origin: bottom right;
+    animation: chatPanelIn 0.3s var(--ease);
+}
+.chat-widget__panel[hidden] {
+    display: none;
+}
+@keyframes chatPanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+.chat-widget__title {
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+.chat-widget__link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s ease;
+}
+.chat-widget__link + .chat-widget__link { margin-top: 0.5rem; }
+.chat-widget__link svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+}
+.chat-widget__link:hover {
+    transform: translateX(-2px);
+    box-shadow: var(--shadow-sm);
+}
+.chat-widget__link--whatsapp { background: #25d366; }
+.chat-widget__link--viber { background: #7360f2; }
+.chat-widget__toggle {
+    width: 3.25rem;
+    height: 3.25rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(24, 86, 73, 0.35);
+    transition: transform 0.3s var(--ease), background 0.2s ease;
+}
+.chat-widget__toggle:hover { transform: translateY(-3px); }
+.chat-widget__toggle.is-open {
+    background: var(--accent);
+    box-shadow: 0 8px 28px rgba(255, 89, 56, 0.35);
+}
+.chat-widget__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+.chat-widget__icon--close { display: none; }
+.chat-widget__toggle.is-open .chat-widget__icon--open { display: none; }
+.chat-widget__toggle.is-open .chat-widget__icon--close { display: block; }
+@media (max-width: 480px) {
+    .chat-widget {
+        right: 1rem;
+        bottom: 5rem;
+    }
 }
 
 /* Back to top */
@@ -1875,6 +2023,7 @@ section[id] { scroll-margin-top: var(--header-h); }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .chat-widget__panel { animation: none; }
     .reveal { opacity: 1; transform: none; transition: none; }
     .hero-orb, .hero-scroll { animation: none; }
     .hosting-1c-badge,
