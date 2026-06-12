@@ -1,0 +1,337 @@
+/* Smart Solutions — OpenCart 4 theme overlay (matches smartsolutions.md) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --ss-primary: #185649;
+    --ss-primary-dark: #0f3d34;
+    --ss-primary-light: #1e6b5c;
+    --ss-accent: #FF5938;
+    --ss-accent-hover: #e84e30;
+    --ss-bg: #ffffff;
+    --ss-bg-muted: #f7f8f9;
+    --ss-text: #111111;
+    --ss-text-muted: #5a5a5a;
+    --ss-border: rgba(24, 86, 73, 0.12);
+    --ss-radius: 1rem;
+    --ss-radius-lg: 1.5rem;
+    --ss-header-h: 5rem;
+    --ss-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ss-font: 'Inter', system-ui, -apple-system, sans-serif;
+    --bs-primary: #185649;
+    --bs-primary-rgb: 24, 86, 73;
+    --bs-link-color: #185649;
+    --bs-link-hover-color: #0f3d34;
+}
+
+body.ss-shop {
+    font-family: var(--ss-font);
+    color: var(--ss-text);
+    background: var(--ss-bg);
+    -webkit-font-smoothing: antialiased;
+    padding-top: 2.5rem;
+}
+
+/* Top bar — link către site principal */
+.ss-shop-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    background: var(--ss-primary-dark);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.8125rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ss-shop-topbar .ss-shop-topbar-inner {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.ss-shop-topbar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+.ss-shop-topbar a:hover {
+    opacity: 1;
+    color: var(--ss-accent);
+}
+.ss-shop-topbar span {
+    opacity: 0.65;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* Header sticky */
+body.ss-shop #top,
+body.ss-shop header {
+    transition: background 0.35s var(--ss-ease), box-shadow 0.35s var(--ss-ease);
+}
+body.ss-shop #top {
+    background: var(--ss-primary);
+    border: none;
+    margin-bottom: 0;
+}
+body.ss-shop #top .nav > li > a,
+body.ss-shop #top .list-inline a,
+body.ss-shop #top .dropdown-toggle {
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 0.8125rem;
+}
+body.ss-shop #top .nav > li > a:hover {
+    color: #fff !important;
+}
+body.ss-shop header {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--ss-border);
+    box-shadow: 0 1px 0 var(--ss-border);
+    position: sticky;
+    top: 2.5rem;
+    z-index: 1000;
+}
+body.ss-shop.is-scrolled header {
+    box-shadow: var(--ss-shadow-sm, 0 4px 24px rgba(17, 17, 17, 0.06));
+}
+
+/* Logo */
+body.ss-shop #logo img {
+    max-height: 3rem;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Main menu */
+body.ss-shop #menu,
+body.ss-shop #menu.navbar,
+body.ss-shop nav.navbar {
+    background: var(--ss-primary) !important;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+body.ss-shop #menu .navbar-nav > li > a,
+body.ss-shop #menu .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.85rem 1rem !important;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+body.ss-shop #menu .navbar-nav > li > a:hover,
+body.ss-shop #menu .nav-link:hover,
+body.ss-shop #menu .navbar-nav > .active > a {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+body.ss-shop #menu .dropdown-menu {
+    border: 1px solid var(--ss-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 12px 48px rgba(17, 17, 17, 0.1);
+    padding: 0.5rem;
+}
+body.ss-shop #menu .dropdown-item {
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+}
+body.ss-shop #menu .dropdown-item:hover {
+    background: var(--ss-bg-muted);
+    color: var(--ss-primary);
+}
+
+/* Search */
+body.ss-shop #search .form-control,
+body.ss-shop .input-group .form-control {
+    border-radius: 9999px 0 0 9999px;
+    border: 1px solid var(--ss-border);
+    padding: 0.65rem 1rem;
+    font-size: 0.875rem;
+}
+body.ss-shop #search .btn,
+body.ss-shop #search .input-group-btn .btn {
+    border-radius: 0 9999px 9999px 0;
+    background: var(--ss-primary);
+    border-color: var(--ss-primary);
+    color: #fff;
+}
+body.ss-shop #search .btn:hover {
+    background: var(--ss-primary-dark);
+    border-color: var(--ss-primary-dark);
+}
+
+/* Buttons */
+body.ss-shop .btn-primary {
+    background: var(--ss-accent) !important;
+    border-color: var(--ss-accent) !important;
+    color: #fff !important;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.25rem;
+    box-shadow: 0 8px 24px rgba(255, 89, 56, 0.28);
+    transition: transform 0.25s var(--ss-ease), box-shadow 0.25s ease, background 0.2s ease;
+}
+body.ss-shop .btn-primary:hover {
+    background: var(--ss-accent-hover) !important;
+    border-color: var(--ss-accent-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255, 89, 56, 0.38);
+}
+body.ss-shop .btn-default,
+body.ss-shop .btn-light {
+    border-radius: 9999px;
+    border: 2px solid var(--ss-primary);
+    color: var(--ss-primary);
+    font-weight: 600;
+    font-size: 0.8125rem;
+}
+body.ss-shop .btn-default:hover,
+body.ss-shop .btn-light:hover {
+    background: var(--ss-primary);
+    color: #fff;
+}
+
+/* Product cards */
+body.ss-shop .product-thumb,
+body.ss-shop .card {
+    border: 1px solid var(--ss-border);
+    border-radius: var(--ss-radius);
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.35s var(--ss-ease), box-shadow 0.35s var(--ss-ease), border-color 0.3s ease;
+}
+body.ss-shop .product-thumb:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(17, 17, 17, 0.1);
+    border-color: rgba(24, 86, 73, 0.25);
+}
+body.ss-shop .product-thumb .caption {
+    padding: 1rem 1.1rem 1.25rem;
+}
+body.ss-shop .product-thumb h4 a,
+body.ss-shop .product-thumb .name a {
+    color: var(--ss-text);
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+body.ss-shop .product-thumb h4 a:hover {
+    color: var(--ss-primary);
+}
+body.ss-shop .product-thumb .price {
+    color: var(--ss-primary);
+    font-weight: 700;
+    font-size: 1.0625rem;
+}
+body.ss-shop .product-thumb .price-old {
+    color: var(--ss-text-muted);
+}
+
+/* Page titles & breadcrumbs */
+body.ss-shop h1, body.ss-shop h2 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ss-text);
+}
+body.ss-shop .breadcrumb {
+    background: transparent;
+    padding: 0.75rem 0 1.25rem;
+    font-size: 0.8125rem;
+}
+body.ss-shop .breadcrumb a {
+    color: var(--ss-text-muted);
+}
+body.ss-shop .breadcrumb a:hover {
+    color: var(--ss-primary);
+}
+
+/* Forms */
+body.ss-shop .form-control,
+body.ss-shop textarea.form-control,
+body.ss-shop select.form-control {
+    border: 1px solid var(--ss-border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+}
+body.ss-shop .form-control:focus {
+    border-color: var(--ss-primary);
+    box-shadow: 0 0 0 3px rgba(24, 86, 73, 0.12);
+}
+
+/* Footer */
+body.ss-shop footer,
+body.ss-shop #footer {
+    background: var(--ss-primary-dark) !important;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    margin-top: 3rem;
+    padding: 3rem 0 2rem;
+}
+body.ss-shop footer h5,
+body.ss-shop #footer h5 {
+    color: #fff;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+}
+body.ss-shop footer a,
+body.ss-shop #footer a {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.875rem;
+}
+body.ss-shop footer a:hover,
+body.ss-shop #footer a:hover {
+    color: var(--ss-accent);
+}
+body.ss-shop footer hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Cart badge */
+body.ss-shop #cart .btn,
+body.ss-shop .btn-group #cart {
+    border-radius: 9999px;
+}
+
+/* Alerts */
+body.ss-shop .alert-success {
+    background: rgba(24, 86, 73, 0.08);
+    border-color: rgba(24, 86, 73, 0.2);
+    color: var(--ss-primary);
+    border-radius: 0.75rem;
+}
+
+/* Content spacing */
+body.ss-shop #content {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+body.ss-shop .container {
+    max-width: 75rem;
+}
+
+@media (max-width: 767px) {
+    body.ss-shop {
+        padding-top: 2.25rem;
+    }
+    body.ss-shop header {
+        top: 2.25rem;
+    }
+    body.ss-shop .ss-shop-topbar .ss-shop-topbar-inner {
+        padding: 0.45rem 1rem;
+        font-size: 0.75rem;
+    }
+}
