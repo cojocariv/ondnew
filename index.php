@@ -164,6 +164,21 @@ $dev_cards = [
     ['title' => 'section_dev_card_visit_title', 'desc' => 'section_dev_card_visit_desc'],
 ];
 
+$dev_portfolio = [
+    [
+        'url' => 'https://alinabradu.com',
+        'logo' => 'assets/portfolio/alinabradu.png',
+        'alt' => 'Alina Bradu',
+    ],
+    [
+        'url' => 'https://ecoschimb.md',
+        'logo' => 'assets/portfolio/ecoschimb.png',
+        'alt' => 'EcoSchimb',
+        'label' => 'ecoschimb.md',
+        'desc' => 'section_dev_portfolio_ecoschimb_desc',
+    ],
+];
+
 $process_steps = [
     ['title' => 'process_1_title', 'desc' => 'process_1_desc'],
     ['title' => 'process_2_title', 'desc' => 'process_2_desc'],
@@ -571,10 +586,21 @@ function service_icon(string $name): string {
                         <span class="kicker"><?php echo htmlspecialchars(t('section_dev_portfolio_kicker'), ENT_QUOTES, 'UTF-8'); ?></span>
                         <h3 class="heading-md" style="margin:0.5rem 0 0.75rem;"><?php echo htmlspecialchars(t('section_dev_portfolio_title'), ENT_QUOTES, 'UTF-8'); ?></h3>
                         <p class="text-muted" style="font-size:0.9375rem;margin:0;"><?php echo htmlspecialchars(t('section_dev_portfolio_desc'), ENT_QUOTES, 'UTF-8'); ?></p>
-                        <a href="https://alinabradu.com" target="_blank" rel="noopener noreferrer" class="dev-portfolio-item">
-                            <img src="assets/portfolio/alinabradu.png" alt="Alina Bradu" class="dev-portfolio-wordmark" width="160" height="72" loading="lazy">
+                        <?php foreach ($dev_portfolio as $project) : ?>
+                        <a href="<?php echo htmlspecialchars($project['url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer" class="dev-portfolio-item">
+                            <div class="dev-portfolio-brand">
+                                <?php if (!empty($project['logo']) && is_file(__DIR__ . '/' . $project['logo'])) : ?>
+                                <img src="<?php echo htmlspecialchars($project['logo'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($project['alt'], ENT_QUOTES, 'UTF-8'); ?>" class="dev-portfolio-wordmark" width="160" height="72" loading="lazy">
+                                <?php else : ?>
+                                <span class="dev-portfolio-label"><?php echo htmlspecialchars($project['label'] ?? $project['alt'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                                <?php if (!empty($project['desc'])) : ?>
+                                <span class="dev-portfolio-desc"><?php echo htmlspecialchars(t($project['desc']), ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                            </div>
                             <span class="dev-portfolio-btn"><?php echo htmlspecialchars(t('section_dev_portfolio_btn'), ENT_QUOTES, 'UTF-8'); ?></span>
                         </a>
+                        <?php endforeach; ?>
                     </div>
                 </aside>
             </div>

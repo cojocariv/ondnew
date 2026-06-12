@@ -19,8 +19,8 @@ return [
     'nav_menu_close' => 'Close menu',
 
     'hero_kicker' => 'Enterprise technology',
-    'hero_title' => 'We turn IT infrastructure into a <span class="text-gradient">competitive advantage</span>',
-    'hero_subtitle' => 'Azure cloud, automation, security and enterprise IT solutions for modern companies.',
+    'hero_title' => 'IT solutions for <span class="text-gradient">your business</span>',
+    'hero_subtitle' => 'Website creation, 1C server migration, security, backup and automations.',
     'hero_cta_primary' => 'Start your project',
     'hero_cta_secondary' => 'Explore services',
     'hero_scroll' => 'Scroll',
@@ -153,7 +153,7 @@ return [
     'cloud_f4_desc' => 'Proactive alerting, centralized logging and dashboards for full visibility.',
 
     'section_dev_kicker' => 'Web development',
-    'section_dev_heading' => 'Website development',
+    'section_dev_heading' => 'Website creation',
     'section_dev_intro' => 'We build modern, fast and easy-to-manage websites — from conversion landing pages to web applications, online stores, brochure sites and other digital projects tailored to your business needs.',
     'section_dev_card_landing_title' => 'Landing page',
     'section_dev_card_landing_desc' => 'Presentation pages optimized for leads, campaigns and conversions.',
@@ -171,6 +171,8 @@ return [
     'section_dev_portfolio_title' => 'Delivered projects',
     'section_dev_portfolio_desc' => 'Examples of websites built by our team — modern design, clear structure and a pleasant visitor experience.',
     'section_dev_portfolio_item_desc' => 'Brochure / personal portfolio site',
+    'section_dev_portfolio_alinabradu_desc' => 'Brochure / personal portfolio site',
+    'section_dev_portfolio_ecoschimb_desc' => 'Corporate site — photovoltaic systems and solar energy',
     'section_dev_portfolio_btn' => 'View site',
 
     'process_kicker' => 'Methodology',

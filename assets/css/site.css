@@ -831,26 +831,46 @@ section[id] { scroll-margin-top: var(--header-h); }
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-top: 1.25rem;
+    margin-top: 0.75rem;
     padding: 1rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.3s ease;
 }
+.dev-portfolio-item:first-of-type {
+    margin-top: 1.25rem;
+}
 .dev-portfolio-item:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-md);
     border-color: rgba(24, 86, 73, 0.3);
 }
-.dev-portfolio-wordmark {
+.dev-portfolio-brand {
     flex: 1;
     min-width: 0;
+}
+.dev-portfolio-wordmark {
+    display: block;
     width: auto;
     height: 3.5rem;
     max-width: 11rem;
     object-fit: contain;
     object-position: left center;
+}
+.dev-portfolio-label {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+.dev-portfolio-desc {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--text-muted);
 }
 .dev-portfolio-btn {
     flex-shrink: 0;

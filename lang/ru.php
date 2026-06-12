@@ -19,8 +19,8 @@ return [
     'nav_menu_close' => 'Закрыть меню',
 
     'hero_kicker' => 'Enterprise технологии',
-    'hero_title' => 'Превращаем IT-инфраструктуру в <span class="text-gradient">конкурентное преимущество</span>',
-    'hero_subtitle' => 'Azure cloud, автоматизация, безопасность и enterprise IT-решения для современных компаний.',
+    'hero_title' => 'IT-решения для <span class="text-gradient">вашего бизнеса</span>',
+    'hero_subtitle' => 'Создание сайтов, миграция 1С на сервер, безопасность, резервное копирование и автоматизация.',
     'hero_cta_primary' => 'Начать проект',
     'hero_cta_secondary' => 'Узнать об услугах',
     'hero_scroll' => 'Scroll',
@@ -153,7 +153,7 @@ return [
     'cloud_f4_desc' => 'Проактивные алерты, централизованное логирование и дашборды для полной видимости.',
 
     'section_dev_kicker' => 'Веб-разработка',
-    'section_dev_heading' => 'Разработка сайтов',
+    'section_dev_heading' => 'Создание сайтов',
     'section_dev_intro' => 'Создаём современные, быстрые и удобные в управлении сайты — от лендингов для конверсии до веб-приложений, интернет-магазинов, сайтов-визиток и других цифровых проектов под задачи вашего бизнеса.',
     'section_dev_card_landing_title' => 'Лендинг',
     'section_dev_card_landing_desc' => 'Презентационные страницы, оптимизированные для лидов, кампаний и конверсий.',
@@ -171,6 +171,8 @@ return [
     'section_dev_portfolio_title' => 'Реализованные проекты',
     'section_dev_portfolio_desc' => 'Примеры сайтов, созданных нашей командой — современный дизайн, понятная структура и приятный опыт для посетителей.',
     'section_dev_portfolio_item_desc' => 'Сайт-визитка / личное портфолио',
+    'section_dev_portfolio_alinabradu_desc' => 'Сайт-визитка / личное портфолио',
+    'section_dev_portfolio_ecoschimb_desc' => 'Корпоративный сайт — фотоэлектрические системы и солнечная энергия',
     'section_dev_portfolio_btn' => 'Открыть сайт',
 
     'process_kicker' => 'Методология',

@@ -19,8 +19,8 @@ return [
     'nav_menu_close' => 'Închide meniul',
 
     'hero_kicker' => 'Tehnologie enterprise',
-    'hero_title' => 'Transformăm infrastructura IT în <span class="text-gradient">avantaj competitiv</span>',
-    'hero_subtitle' => 'Cloud Azure, automatizare, securitate și soluții IT enterprise pentru companii moderne.',
+    'hero_title' => 'Soluții IT pentru <span class="text-gradient">compania ta</span>',
+    'hero_subtitle' => 'Creare site-uri, migrare 1C pe server, securitate, backup și automatizări.',
     'hero_cta_primary' => 'Începe proiectul',
     'hero_cta_secondary' => 'Descoperă serviciile',
     'hero_scroll' => 'Scroll',
@@ -153,7 +153,7 @@ return [
     'cloud_f4_desc' => 'Alerting proactiv, logging centralizat și dashboards pentru vizibilitate completă.',
 
     'section_dev_kicker' => 'Dezvoltare web',
-    'section_dev_heading' => 'Dezvoltare site-uri',
+    'section_dev_heading' => 'Creare site-uri',
     'section_dev_intro' => 'Construim site-uri moderne, rapide și ușor de administrat — de la landing page-uri de conversie până la aplicații web, magazine online, site-uri de vizită și alte tipuri de proiecte digitale, adaptate nevoilor afacerii tale.',
     'section_dev_card_landing_title' => 'Landing page',
     'section_dev_card_landing_desc' => 'Pagini de prezentare optimizate pentru lead-uri, campanii și conversii.',
@@ -171,6 +171,8 @@ return [
     'section_dev_portfolio_title' => 'Proiecte livrate',
     'section_dev_portfolio_desc' => 'Exemple de site-uri dezvoltate de echipa noastră — design modern, structură clară și experiență plăcută pentru vizitatori.',
     'section_dev_portfolio_item_desc' => 'Site de vizită / portofoliu personal',
+    'section_dev_portfolio_alinabradu_desc' => 'Site de vizită / portofoliu personal',
+    'section_dev_portfolio_ecoschimb_desc' => 'Site corporate — sisteme fotovoltaice și energie solară',
     'section_dev_portfolio_btn' => 'Vezi site',
 
     'process_kicker' => 'Metodologie',
