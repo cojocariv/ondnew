@@ -7,6 +7,10 @@ require __DIR__ . '/phpmailer/src/SMTP.php';
 require __DIR__ . '/includes/site_data.php';
 require __DIR__ . '/includes/i18n.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $mail_config_file = __DIR__ . '/includes/mail_config.php';
 if (!is_file($mail_config_file)) {
     $mail_config_file = __DIR__ . '/includes/mail_config.example.php';
@@ -18,16 +22,35 @@ if (!is_array($mail_config)) {
 
 $contact_success = '';
 $contact_error   = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nume   = isset($_POST['nume'])   ? trim($_POST['nume'])   : '';
-    $email  = isset($_POST['email'])  ? trim($_POST['email'])  : '';
-    $mesaj  = isset($_POST['mesaj'])  ? trim($_POST['mesaj'])  : '';
+$nume = '';
+$email = '';
+$mesaj = '';
+
+if (!empty($_SESSION['contact_flash'])) {
+    $contact_flash = $_SESSION['contact_flash'];
+    unset($_SESSION['contact_flash']);
+    if (($contact_flash['type'] ?? '') === 'success') {
+        $contact_success = $contact_flash['message'] ?? '';
+    } elseif (($contact_flash['type'] ?? '') === 'error') {
+        $contact_error = $contact_flash['message'] ?? '';
+        $nume = $contact_flash['nume'] ?? '';
+        $email = $contact_flash['email'] ?? '';
+        $mesaj = $contact_flash['mesaj'] ?? '';
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nume'], $_POST['email'], $_POST['mesaj'])) {
+    $nume   = trim($_POST['nume']);
+    $email  = trim($_POST['email']);
+    $mesaj  = trim($_POST['mesaj']);
+    $flash  = ['type' => 'error', 'message' => '', 'nume' => $nume, 'email' => $email, 'mesaj' => $mesaj];
+
     if ($nume === '' || $email === '' || $mesaj === '') {
-        $contact_error = t('contact_error_required');
+        $flash['message'] = t('contact_error_required');
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $contact_error = t('contact_error_invalid_email');
+        $flash['message'] = t('contact_error_invalid_email');
     } elseif (trim($mail_config['password'] ?? '') === '') {
-        $contact_error = t('contact_error_send_prefix') . t('contact_error_smtp_not_configured');
+        $flash['message'] = t('contact_error_send_prefix') . t('contact_error_smtp_not_configured');
     } else {
         $mail = new PHPMailer(true);
         try {
@@ -59,13 +82,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $body .= "Mesaj:\r\n{$mesaj}\r\n";
             $mail->Body = $body;
             $mail->send();
-            $contact_success = t('contact_success');
-            $nume = $email = $mesaj = '';
+            $flash = ['type' => 'success', 'message' => t('contact_success')];
         } catch (Exception $e) {
-            $contact_error = t('contact_error_send_prefix') .
-                htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+            $flash = [
+                'type' => 'error',
+                'message' => t('contact_error_send_prefix') . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'),
+                'nume' => $nume,
+                'email' => $email,
+                'mesaj' => $mesaj,
+            ];
         }
     }
+
+    $_SESSION['contact_flash'] = $flash;
+    $redirect_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $redirect_query = $lang !== 'ro' ? '?lang=' . urlencode($lang) : '';
+    header('Location: ' . $redirect_path . $redirect_query . '#contact', true, 303);
+    exit;
 }
 
 $company_seo = $site_data['company'] ?? [];
@@ -739,7 +772,7 @@ function service_icon(string $name): string {
                         <?php echo htmlspecialchars(t('contact_map_placeholder'), ENT_QUOTES, 'UTF-8'); ?>
                     </div>
                 </div>
-                <form method="post" action="#contact" class="contact-form reveal reveal-delay-2">
+                <form method="post" action="<?php echo htmlspecialchars(($lang !== 'ro' ? '?lang=' . urlencode($lang) : '') . '#contact', ENT_QUOTES, 'UTF-8'); ?>" class="contact-form reveal reveal-delay-2">
                     <?php if (!empty($contact_success)) : ?>
                         <div class="form-alert form-alert--success"><?php echo htmlspecialchars($contact_success, ENT_QUOTES, 'UTF-8'); ?></div>
                     <?php elseif (!empty($contact_error)) : ?>
