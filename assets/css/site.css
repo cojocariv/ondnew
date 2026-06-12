@@ -178,9 +178,9 @@ section[id] { scroll-margin-top: var(--header-h); }
     height: 100%;
 }
 .site-logo {
-    height: 2.5rem;
+    height: 3rem;
     width: auto;
-    max-width: 11rem;
+    max-width: 13rem;
     object-fit: contain;
     transition: filter 0.3s ease;
 }

@@ -255,7 +255,7 @@ function service_icon(string $name): string {
 <header id="site-header" class="site-header is-dark">
     <div class="container header-inner">
         <a href="#top" aria-label="<?php echo htmlspecialchars(t('nav_aria_home', $company_name), ENT_QUOTES, 'UTF-8'); ?>">
-            <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>" class="site-logo" width="180" height="40">
+            <img src="assets/LOGO/transparent%20logo.png" alt="<?php echo htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'); ?>" class="site-logo" width="216" height="48">
         </a>
         <nav class="nav-desktop" aria-label="<?php echo htmlspecialchars(t('nav_aria_main'), ENT_QUOTES, 'UTF-8'); ?>">
             <a href="#services"><?php echo htmlspecialchars(t('nav_services'), ENT_QUOTES, 'UTF-8'); ?></a>
