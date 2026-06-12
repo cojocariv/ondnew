@@ -241,6 +241,7 @@ return [
     'contact_error_invalid_email' => 'Адрес email недействителен.',
     'contact_success' => 'Сообщение успешно отправлено. Мы ответим в ближайшее время.',
     'contact_error_send_prefix' => 'Произошла ошибка при отправке сообщения: ',
+    'contact_error_smtp_not_configured' => 'SMTP не настроен на сервере (includes/mail_config.php).',
 
     'footer_default_text' => 'Azure cloud, разработка сайтов, backup, Microsoft 365, хостинг 1С и managed IT для компаний в Молдове, Румынии и Европе.',
     'footer_services' => 'Услуги',

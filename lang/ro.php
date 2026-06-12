@@ -241,6 +241,7 @@ return [
     'contact_error_invalid_email' => 'Adresa de email nu este validă.',
     'contact_success' => 'Mesajul a fost trimis cu succes. Îți vom răspunde în cel mai scurt timp.',
     'contact_error_send_prefix' => 'A apărut o eroare la trimiterea mesajului: ',
+    'contact_error_smtp_not_configured' => 'SMTP nu este configurat pe server (includes/mail_config.php).',
 
     'footer_default_text' => 'Cloud Azure, dezvoltare web, backup, Microsoft 365, hosting 1C și servicii IT managed pentru companii din Moldova, România și Europa.',
     'footer_services' => 'Servicii',

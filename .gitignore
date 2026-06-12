@@ -4,6 +4,9 @@ data/site_data.json
 # Parola admin – fiecare server are propria parolă
 admin/config.php
 
+# SMTP formular contact – parola pe fiecare server
+includes/mail_config.php
+
 # Opțional: fișiere locale / IDE
 .DS_Store
 Thumbs.db

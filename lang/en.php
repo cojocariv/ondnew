@@ -241,6 +241,7 @@ return [
     'contact_error_invalid_email' => 'The email address is not valid.',
     'contact_success' => 'Your message was sent successfully. We will reply as soon as possible.',
     'contact_error_send_prefix' => 'An error occurred while sending the message: ',
+    'contact_error_smtp_not_configured' => 'SMTP is not configured on the server (includes/mail_config.php).',
 
     'footer_default_text' => 'Azure cloud, web development, backup, Microsoft 365, 1C hosting and managed IT for companies in Moldova, Romania and Europe.',
     'footer_services' => 'Services',

@@ -1,0 +1,4 @@
+# Blochează accesul direct la fișierele de configurare
+<Files "mail_config.php">
+    Require all denied
+</Files>

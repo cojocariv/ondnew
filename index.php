@@ -7,6 +7,15 @@ require __DIR__ . '/phpmailer/src/SMTP.php';
 require __DIR__ . '/includes/site_data.php';
 require __DIR__ . '/includes/i18n.php';
 
+$mail_config_file = __DIR__ . '/includes/mail_config.php';
+if (!is_file($mail_config_file)) {
+    $mail_config_file = __DIR__ . '/includes/mail_config.example.php';
+}
+$mail_config = require $mail_config_file;
+if (!is_array($mail_config)) {
+    $mail_config = [];
+}
+
 $contact_success = '';
 $contact_error   = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,19 +26,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $contact_error = t('contact_error_required');
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $contact_error = t('contact_error_invalid_email');
+    } elseif (trim($mail_config['password'] ?? '') === '') {
+        $contact_error = t('contact_error_send_prefix') . t('contact_error_smtp_not_configured');
     } else {
         $mail = new PHPMailer(true);
         try {
+            $smtp_host = trim($mail_config['host'] ?? 'mail.smartsolutions.md');
+            $smtp_port = (int) ($mail_config['port'] ?? 465);
+            $smtp_user = trim($mail_config['username'] ?? 'contact@smartsolutions.md');
+            $smtp_from = trim($mail_config['from_email'] ?? $smtp_user);
+            $smtp_name = trim($mail_config['from_name'] ?? 'Smart Solutions');
+
             $mail->isSMTP();
-            $mail->Host       = 'mail.smartsolutions.md';
+            $mail->Host       = $smtp_host;
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'contact@smartsolutions.md';
-            $mail->Password   = 'AAD1sup@$$';
+            $mail->Username   = $smtp_user;
+            $mail->Password   = $mail_config['password'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $mail->Port       = 465;
+            $mail->Port       = $smtp_port > 0 ? $smtp_port : 465;
             $mail->CharSet    = 'UTF-8';
-            $mail->setFrom('contact@smartsolutions.md', 'Smart Solutions');
-            $mail->addAddress('sales@smartsolutions.md');
+            $mail->setFrom($smtp_from, $smtp_name);
+            $contact_recipient = trim($site_data['contact']['email_support'] ?? '');
+            if ($contact_recipient === '' || !filter_var($contact_recipient, FILTER_VALIDATE_EMAIL)) {
+                $contact_recipient = 'contact@smartsolutions.md';
+            }
+            $mail->addAddress($contact_recipient);
             $mail->addReplyTo($email, $nume);
             $mail->Subject = 'Mesaj nou de pe formularul Smart Solutions';
             $body  = "Ai primit un mesaj nou de pe site.\r\n\r\n";
