@@ -858,6 +858,10 @@ section[id] { scroll-margin-top: var(--header-h); }
     object-fit: contain;
     object-position: left center;
 }
+.dev-portfolio-wordmark--wide {
+    height: 3.25rem;
+    max-width: 14rem;
+}
 .dev-portfolio-label {
     display: block;
     font-size: 1.0625rem;

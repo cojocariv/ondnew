@@ -228,7 +228,7 @@ $dev_portfolio = [
         'url' => 'https://ecoschimb.md',
         'logo' => 'assets/portfolio/ecoschimb.png',
         'alt' => 'EcoSchimb',
-        'label' => 'ecoschimb.md',
+        'logo_class' => 'dev-portfolio-wordmark--wide',
         'desc' => 'section_dev_portfolio_ecoschimb_desc',
     ],
 ];
@@ -644,7 +644,7 @@ function service_icon(string $name): string {
                         <a href="<?php echo htmlspecialchars($project['url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer" class="dev-portfolio-item">
                             <div class="dev-portfolio-brand">
                                 <?php if (!empty($project['logo']) && is_file(__DIR__ . '/' . $project['logo'])) : ?>
-                                <img src="<?php echo htmlspecialchars($project['logo'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($project['alt'], ENT_QUOTES, 'UTF-8'); ?>" class="dev-portfolio-wordmark" width="160" height="72" loading="lazy">
+                                <img src="<?php echo htmlspecialchars($project['logo'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($project['alt'], ENT_QUOTES, 'UTF-8'); ?>" class="dev-portfolio-wordmark<?php echo !empty($project['logo_class']) ? ' ' . htmlspecialchars($project['logo_class'], ENT_QUOTES, 'UTF-8') : ''; ?>" width="160" height="72" loading="lazy">
                                 <?php else : ?>
                                 <span class="dev-portfolio-label"><?php echo htmlspecialchars($project['label'] ?? $project['alt'], ENT_QUOTES, 'UTF-8'); ?></span>
                                 <?php endif; ?>
