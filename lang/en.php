@@ -173,6 +173,7 @@ return [
     'section_dev_portfolio_item_desc' => 'Brochure / personal portfolio site',
     'section_dev_portfolio_alinabradu_desc' => 'Brochure / personal portfolio site',
     'section_dev_portfolio_ecoschimb_desc' => 'Corporate site — photovoltaic systems and solar energy',
+    'section_dev_portfolio_volumtrans_desc' => 'Corporate site — transport and logistics',
     'section_dev_portfolio_btn' => 'View site',
 
     'process_kicker' => 'Methodology',

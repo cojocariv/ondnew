@@ -173,6 +173,7 @@ return [
     'section_dev_portfolio_item_desc' => 'Сайт-визитка / личное портфолио',
     'section_dev_portfolio_alinabradu_desc' => 'Сайт-визитка / личное портфолио',
     'section_dev_portfolio_ecoschimb_desc' => 'Корпоративный сайт — фотоэлектрические системы и солнечная энергия',
+    'section_dev_portfolio_volumtrans_desc' => 'Корпоративный сайт — транспорт и логистика',
     'section_dev_portfolio_btn' => 'Открыть сайт',
 
     'process_kicker' => 'Методология',

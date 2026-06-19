@@ -173,6 +173,7 @@ return [
     'section_dev_portfolio_item_desc' => 'Site de vizită / portofoliu personal',
     'section_dev_portfolio_alinabradu_desc' => 'Site de vizită / portofoliu personal',
     'section_dev_portfolio_ecoschimb_desc' => 'Site corporate — sisteme fotovoltaice și energie solară',
+    'section_dev_portfolio_volumtrans_desc' => 'Site corporate — transport și logistică',
     'section_dev_portfolio_btn' => 'Vezi site',
 
     'process_kicker' => 'Metodologie',

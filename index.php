@@ -231,6 +231,13 @@ $dev_portfolio = [
         'logo_class' => 'dev-portfolio-wordmark--wide',
         'desc' => 'section_dev_portfolio_ecoschimb_desc',
     ],
+    [
+        'url' => 'https://volumtrans.com',
+        'logo' => 'assets/portfolio/volumtrans.png',
+        'alt' => 'Volum Trans Logistic',
+        'logo_class' => 'dev-portfolio-wordmark--wide',
+        'desc' => 'section_dev_portfolio_volumtrans_desc',
+    ],
 ];
 
 $process_steps = [
